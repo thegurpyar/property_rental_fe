@@ -1,8 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-
-
 const apiClient = axios.create({
   baseURL: "http://localhost:5000/api",
   headers: {
@@ -10,68 +8,53 @@ const apiClient = axios.create({
   },
 });
 
+// ✅ Exclude both verify-otp and refresh from auth header
 apiClient.interceptors.request.use((config) => {
-    const token = Cookies.get("accessToken");
-  
-    if (config.url?.includes("/auth/verify-otp")) {
-      return config; // 🚫 no token
-    }
-  
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  
+  const token = Cookies.get("accessToken");
+
+  const excluded = ["/auth/verify-otp", "/auth/refresh"];
+  if (excluded.some((url) => config.url?.includes(url))) {
     return config;
-  });
-
-apiClient.refreshTokens = async () => {
-  try {
-    const refreshToken = Cookies.get("refreshToken");
-    if (!refreshToken) {
-      throw new Error("No refresh token available");
-    }
-
-    const response = await apiClient.post("/auth/refresh", {
-      refreshToken,
-    });
-
-    const { accessToken, refreshToken: newRefreshToken } = response.data;
-
-    Cookies.set("accessToken", accessToken);
-    Cookies.set("refreshToken", newRefreshToken);
-
-    return { accessToken, refreshToken: newRefreshToken };
-  } catch (error) {
-    console.error("Token refresh failed:", error);
-    throw error;
   }
-};
 
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+// ✅ Extracted as a standalone function to avoid TS issues
+const refreshTokens = async () => {
+  const refreshToken = Cookies.get("refreshToken");
+  if (!refreshToken) throw new Error("No refresh token available");
+
+  // ✅ Fixed: response.data.data instead of response.data
+  const response = await apiClient.post("/auth/refresh", { refreshToken });
+  const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+
+  Cookies.set("accessToken", accessToken);
+  Cookies.set("refreshToken", newRefreshToken);
+
+  return { accessToken, refreshToken: newRefreshToken };
+};
 
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If access token expired
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        const { accessToken } = await apiClient.refreshTokens();
-
-        // Update header and retry request
+        const { accessToken } = await refreshTokens();
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // ❌ Refresh failed → logout user
         Cookies.remove("accessToken");
         Cookies.remove("refreshToken");
-
-        // Optional: redirect to login
         window.location.href = "/login";
-
         return Promise.reject(refreshError);
       }
     }

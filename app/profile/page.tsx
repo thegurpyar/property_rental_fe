@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { 
   User, 
   Phone, 
@@ -16,15 +16,37 @@ import {
 import { Card, CardContent } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 
+import apiClient from "../../lib/apClient"
 export default function ProfilePage() {
-  // Mock data matching your Navbar pill
-  const [userData] = useState({
-    name: "Ujjwal Nagpal",
-    phone: "+91 98785 43210",
-    email: "ujjwal@propertypro.com",
-    location: "Chandigarh, India",
-    listingsCount: 3
+
+  
+  const [userData, setUserData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    location: "",
+    listingsCount: 0
   });
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await apiClient.get("/auth/me");
+  
+        const user = res.data;
+  
+        setUserData((prev) => ({
+          ...prev,
+          name: user.full_name,
+          phone: user.number,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+  
+    fetchUser();
+  }, []);
 
   const myProperties = [
     { id: 1, title: "Modern 3BHK Apartment", price: "₹85 Lakhs", status: "Active", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80" },

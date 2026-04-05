@@ -25,36 +25,40 @@
         // Refresh token lives longer (e.g., 7 days)
         Cookies.set("refreshToken", tokens.refreshToken, { expires: 7, secure: true, sameSite: 'strict' });
     };
-const handleRegister = async () => {
-  if (!name || !phoneNumber) return alert("Please fill all details");
-  setIsLoading(true);
-  
-  try {
-    const response = await apiClient.post("/auth/register", {
-      full_name: name,
-      number: phoneNumber,
-    });
-
-    // ── Check only for success to navigate ──
-    if (response.data.success) {
-      const tokens = response.data.data?.tokens; // Use optional chaining
-      
-      if (tokens) {
-        saveTokens(tokens);
-        setAccessToken(tokens.accessToken);
-      } else {
-        console.warn("Backend didn't send tokens in register response. Ensure verify-otp doesn't require a Bearer token yet.");
+    const handleRegister = async () => {
+      if (!name || !phoneNumber) return alert("Please fill all details");
+    
+      setIsLoading(true);
+    
+      try {
+        const response = await apiClient.post("/auth/register", {
+          full_name: name,
+          number: phoneNumber,
+        });
+    
+        if (response.data.success) {
+          const data = response.data.data;
+          const tokens = data?.tokens;
+    
+          // ✅ CASE 1: Existing user → tokens returned → LOGIN directly
+          if (tokens) {
+            saveTokens(tokens);
+            setAccessToken(tokens.accessToken);
+    
+            setStep("success"); // 🚀 skip OTP
+            return;
+          }
+    
+          // ✅ CASE 2: New user → OTP sent
+          setStep("otp");
+        }
+      } catch (error: any) {
+        console.error("Registration Error:", error.response?.data || error.message);
+        alert(error.response?.data?.message || "Registration failed.");
+      } finally {
+        setIsLoading(false);
       }
-
-      setStep("otp"); // ✅ Move this here so it always triggers on success
-    }
-  } catch (error: any) {
-    console.error("Registration Error:", error.response?.data || error.message);
-    alert(error.response?.data?.message || "Registration failed.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+    };
 
 const handleVerifyOtp = async () => {
     const otpString = otp.join("");
