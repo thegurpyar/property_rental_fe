@@ -14,7 +14,7 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get("adminToken");
+    const token = Cookies.get("accessToken");
 
     // 🛡️ AUTH GUARD: If no token, redirect to login
     if (!token) {

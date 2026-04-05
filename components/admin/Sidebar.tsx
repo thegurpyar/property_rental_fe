@@ -17,7 +17,8 @@ export default function Sidebar() {
 
   // ── 🚪 Logout Logic ──
   const handleLogout = () => {
-    Cookies.remove("adminToken");
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
     router.push("/admin/login");
   };
 
