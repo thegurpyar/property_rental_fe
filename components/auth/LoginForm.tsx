@@ -3,10 +3,10 @@
     import { useState, useRef, KeyboardEvent } from "react";
     import Cookies from "js-cookie";
     import { ArrowRight, ArrowLeft, ShieldCheck, CheckCircle2, LayoutDashboard, User, Loader2 } from "lucide-react";
-    import { Button } from "@/components/ui/button";
-    import { Input } from "@/components/ui/input";
-    import { Label } from "@/components/ui/label";
-    import { Card, CardContent } from "@/components/ui/card";
+    import { Button } from "../ui/Button";
+    import { Input } from "../ui/input";
+    import { Label } from "../ui/label";
+    import { Card, CardContent } from "../ui/Card";
     import apiClient from "@/lib/apClient";
 
     export default function LoginForm() {

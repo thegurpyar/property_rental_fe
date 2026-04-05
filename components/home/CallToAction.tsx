@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Phone, Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "../ui/Button";
+import { Card, CardContent } from "../ui/Card";
 
 export default function CallToAction() {
   const [isVisible, setIsVisible] = useState(false);

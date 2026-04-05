@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { ShieldCheck, Lock, Loader2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import apiClient from "@/lib/apClient";
+import { Card, CardContent } from "../../../components/ui/Card";
+import { Button } from "../../../components/ui/Button";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import apiClient from "../../../lib/apClient";
 
 export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);

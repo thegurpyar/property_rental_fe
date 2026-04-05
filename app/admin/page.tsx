@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Users, Building2, ShieldCheck, TrendingUp } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import apiClient from "@/lib/apClient";
-import StatsCard from "@/components/admin/StatsCard";
+import { Card } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import apiClient from "../../lib/apClient";
+import StatsCard from "../../components/admin/StatsCard";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ totalUsers: 0, activeProperties: 0, pendingApprovals: 0 });

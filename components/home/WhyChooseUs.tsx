@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Headphones, Timer, ShieldCheck } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "../ui/Card";
 
 const FEATURES = [
   {
