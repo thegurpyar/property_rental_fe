@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Home, UserCircle2, ChevronDown, User, Phone } from "lucide-react";
-import { Button } from "../ui/Button";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
   const pathname = usePathname();

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "../ui/Button";
+import { Button } from "../ui/button";
 import PropertyCard from "../property/PropertyCard";
 
 const SAMPLE_PROPERTIES = [
@@ -10,41 +10,41 @@ const SAMPLE_PROPERTIES = [
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070",
     title: "Spacious & Luxurious in Dubai",
     location: "Downtown, Dubai, UAE",
-    price: "₹ 7,500",
+    price: 7500,
     beds: 4,
     baths: 2,
     sqft: 1150,
-    timeAgo: "6 months ago"
+    postedAt: "6 months ago"
   },
   {
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
     title: "Modern Villa with Pool",
     location: "Downtown, Dubai, UAE",
-    price: "₹ 12,000",
+    price: 12000,
     beds: 5,
     baths: 3,
     sqft: 2100,
-    timeAgo: "1 year ago"
+    postedAt: "1 year ago"
   },
   {
     image: "https://images.unsplash.com/photo-1600607687940-c52af0b4396b?q=80&w=2070",
     title: "Sky High Penthouse",
     location: "Downtown, Dubai, UAE",
-    price: "₹ 9,800",
+    price: 9800,
     beds: 3,
     baths: 2,
     sqft: 1450,
-    timeAgo: "1 month ago"
+    postedAt: "1 month ago"
   },
   {
     image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=2070",
     title: "Minimalist Urban Loft",
     location: "Downtown, Dubai, UAE",
-    price: "₹ 5,200",
+    price: 5200,
     beds: 2,
     baths: 1,
     sqft: 950,
-    timeAgo: "1 month ago"
+    postedAt: "1 month ago"
   }
 ];
 

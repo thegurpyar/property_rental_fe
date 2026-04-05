@@ -1,17 +1,17 @@
 import { Bed, Bath, Square, MapPin, Bookmark, Plus } from "lucide-react";
 import Image from "next/image";
-import { Card, CardContent } from "../ui/Card";
-import { Button } from "../ui/Button";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
 
 interface PropertyProps {
   image: string;
   title: string;
   location: string;
-  price: string;
+  price: number;
   beds: number;
   baths: number;
   sqft: number;
-  timeAgo: string;
+  postedAt: string;
 }
 
 export default function PropertyCard({ property }: { property: PropertyProps }) {
@@ -59,7 +59,7 @@ export default function PropertyCard({ property }: { property: PropertyProps }) 
         </div>
 
         <div className="text-[#1a2b49] font-extrabold text-xl mb-4">
-          {property.price}
+          ₹{property.price.toLocaleString()}
         </div>
 
         {/* Amenities */}
@@ -89,7 +89,7 @@ export default function PropertyCard({ property }: { property: PropertyProps }) 
           </Button>
           
           <span className="text-gray-400 text-[11px] font-medium">
-            {property.timeAgo}
+            {property.postedAt}
           </span>
         </div>
       </CardContent>

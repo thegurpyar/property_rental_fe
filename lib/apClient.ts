@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://module-project-tx70.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },

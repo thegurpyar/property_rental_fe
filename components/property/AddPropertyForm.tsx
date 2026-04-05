@@ -5,8 +5,8 @@ import {
   Home, Upload, CheckCircle2, MapPin, Info, 
   LayoutDashboard, Phone, User, Camera, ShieldCheck 
 } from "lucide-react";
-import { Button } from "../ui/Button";
-import { Card, CardContent } from "../ui/Card";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Loader2, Search, MoreVertical } from "lucide-react";
 
 export default function UsersList() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<{ id: string; full_name: string; number: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
