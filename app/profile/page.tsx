@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 import {
   User,
   Phone,
-  Mail,
-  MapPin,
   Edit3,
   Building2,
-  Heart,
   Clock,
   Plus,
   ChevronRight
@@ -23,8 +20,6 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState({
     name: "",
     phone: "",
-    email: "",
-    location: "",
     listingsCount: 0
   });
 
@@ -33,13 +28,14 @@ export default function ProfilePage() {
       try {
         const res = await apiClient.get("/auth/me");
 
-        const user = res.data;
-
-        setUserData((prev) => ({
-          ...prev,
-          name: user.full_name,
-          phone: user.number,
-        }));
+        if (res.data.success) {
+          const user = res.data.data;
+          setUserData((prev) => ({
+            ...prev,
+            name: user.full_name,
+            phone: user.number,
+          }));
+        }
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }
@@ -76,16 +72,8 @@ export default function ProfilePage() {
               <span className="bg-orange-100 text-[#FF7F32] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Premium Member</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 max-w-2xl">
-              <div className="flex items-center gap-3 text-slate-500 font-bold text-sm">
-                <Phone size={18} className="text-[#FF7F32]" /> {userData.phone}
-              </div>
-              <div className="flex items-center gap-3 text-slate-500 font-bold text-sm">
-                <Mail size={18} className="text-[#FF7F32]" /> {userData.email}
-              </div>
-              <div className="flex items-center gap-3 text-slate-500 font-bold text-sm">
-                <MapPin size={18} className="text-[#FF7F32]" /> {userData.location}
-              </div>
+            <div className="flex items-center justify-center md:justify-start gap-3 text-slate-500 font-bold text-sm">
+              <Phone size={18} className="text-[#FF7F32]" /> {userData.phone}
             </div>
           </div>
 
@@ -143,4 +131,4 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-}
+}
