@@ -32,29 +32,31 @@ export default function AdminLoginPage() {
 //   };
 
 const handleAdminLogin = async () => {
-    if (!credentials.email || !credentials.password) {
-      return alert("Enter credentials");
-    }
-  
-    setIsLoading(true);
-  
-    try {
-      // 🚀 TEMP: fake login (no API)
-      const fakeToken = "admin-temp-token";
-  
-      // store in cookies
-      Cookies.set("adminToken", fakeToken, { expires: 1 });
-  
-      // redirect
-      router.push("/admin");
-  
-    } catch (error: any) {
-      alert("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  if (!credentials.email || !credentials.password) {
+    return alert("Enter credentials");
+  }
 
+  setIsLoading(true);
+
+  try {
+    const response = await apiClient.post("/auth/login", credentials);
+
+    if (response.data.success) {
+      const { accessToken, refreshToken } = response.data.data.tokens;
+
+      // ✅ Store tokens
+      Cookies.set("accessToken", accessToken, { expires: 1 });
+      Cookies.set("refreshToken", refreshToken, { expires: 30 });
+
+
+      router.push("/admin");
+    }
+  } catch (error: any) {
+    alert(error.response?.data?.message || "Invalid Admin Credentials");
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
     // 🎯 Fixed: Removed extra p-4 to ensure perfect centering
     <div className="h-screen w-full bg-[#fffbf9] flex items-center justify-center relative overflow-hidden">
