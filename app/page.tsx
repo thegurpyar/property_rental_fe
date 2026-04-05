@@ -1,8 +1,8 @@
-import HeroSection from "@/components/home/HeroSection";
-import LatestProperties from "@/components/home/LatestProperties";
-import PropertyCategorySection from "@/components/home/PropertyCategorySection";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
-import CallToAction from "@/components/home/CallToAction";
+import HeroSection from "@/components/home/herosection";
+import LatestProperties from "@/components/home/latestproperties";
+import PropertyCategorySection from "@/components/home/propertycategorysection";
+import WhyChooseUs from "@/components/home/whychooseus";
+import CallToAction from "@/components/home/calltoaction";
 
 export default function HomePage() {
   return (

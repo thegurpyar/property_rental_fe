@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import AddPropertyForm from "@/components/property/AddPropertyForm";
-import BenefitsSection from "@/components/property/BenefitsSection";
-import HowItWorks from "@/components/property/HowItWorks";
-import FAQSection from "@/components/property/FAQSection";
+import AddPropertyForm from "@/components/property/addpropertyform";
+import BenefitsSection from "@/components/property/benefitssection";
+import HowItWorks from "@/components/property/howitworks";
+import FAQSection from "@/components/property/faqsection";
 
 export default function PropertyPage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });

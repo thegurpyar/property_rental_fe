@@ -1,4 +1,4 @@
-import PropertyCard from "@/components/property/PropertyCard";
+import PropertyCard from "@/components/property/propertycard";
 import { MOCK_PROPERTIES } from "@/lib/constants";
 
 export default function PropertiesPage() {

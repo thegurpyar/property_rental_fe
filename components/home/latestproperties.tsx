@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import PropertyCard from "../property/PropertyCard";
+import { Button } from "../ui/button";
+import PropertyCard from "../property/propertycard";
 
 const SAMPLE_PROPERTIES = [
   {
@@ -62,9 +62,9 @@ export default function LatestProperties() {
           if (sectionRef.current) observer.unobserve(sectionRef.current);
         }
       },
-      { 
+      {
         threshold: 0.15, // Trigger when 15% of the section is visible
-        rootMargin: "0px 0px -50px 0px" 
+        rootMargin: "0px 0px -50px 0px"
       }
     );
 
@@ -75,7 +75,7 @@ export default function LatestProperties() {
   return (
     <section ref={sectionRef} className="py-24 px-6 md:px-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* --- Header Section --- */}
         <div className={`flex justify-between items-end mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
           <div className="max-w-xl">
@@ -86,38 +86,38 @@ export default function LatestProperties() {
               We have completed several housing, villa and property orders with our professional team, at costs that suit you.
             </p>
           </div>
-          
+
           {/* Navigation Buttons (Shadcn) */}
           <div className="hidden md:flex items-center gap-6 pb-2">
-            <Button 
-              variant="outline" 
-              size="icon" 
+            <Button
+              variant="outline"
+              size="icon"
               className="w-14 h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
             >
-              <ArrowLeft size={20}/>
+              <ArrowLeft size={20} />
             </Button>
-            
+
             <span className="font-black text-[#1a2b49] text-xs tracking-[0.3em]">01/03</span>
-            
-            <Button 
-              variant="outline" 
-              size="icon" 
+
+            <Button
+              variant="outline"
+              size="icon"
               className="w-14 h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
             >
-              <ArrowRight size={20}/>
+              <ArrowRight size={20} />
             </Button>
           </div>
         </div>
-        
+
         {/* --- Properties Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {SAMPLE_PROPERTIES.map((property, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`reveal-on-scroll ${isVisible ? 'animate-active' : ''} hover:-translate-y-3 transition-transform duration-500`}
-              style={{ 
+              style={{
                 // Creating the Waterfall effect: Each card waits a bit longer
-                animationDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms' 
+                animationDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms'
               }}
             >
               <PropertyCard property={property} />

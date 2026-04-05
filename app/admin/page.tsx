@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Users, Building2, ShieldCheck, TrendingUp } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import apiClient from "../../lib/apClient";
 import StatsCard from "../../components/admin/StatsCard";
 
@@ -15,7 +15,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const token = Cookies.get("adminToken");
-    
+
     // 🛡️ AUTH GUARD: If no token, redirect to login
     if (!token) {
       router.push("/admin/login");
@@ -26,8 +26,8 @@ export default function AdminDashboard() {
       try {
         const res = await apiClient.get("/admin/dashboard-stats");
         if (res.data.success) setStats(res.data.data);
-      } catch (err) { 
-        console.error(err); 
+      } catch (err) {
+        console.error(err);
         // If token is invalid/expired
         // router.push("/admin/login");
       }

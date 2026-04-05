@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { 
-  Home, Upload, CheckCircle2, MapPin, Info, 
-  LayoutDashboard, Phone, User, Camera, ShieldCheck 
+import {
+  Home, Upload, CheckCircle2, MapPin, Info,
+  LayoutDashboard, Phone, User, Camera, ShieldCheck
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select, SelectContent, SelectItem, 
-  SelectTrigger, SelectValue 
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import {
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
@@ -46,13 +46,13 @@ export default function AddPropertyForm() {
   const sectionHeader = "flex items-center gap-2 text-[#1a2b49] font-black text-sm uppercase tracking-widest mb-8 border-b border-gray-100 pb-3";
 
   return (
-    <Card 
+    <Card
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className={`group rounded-[48px] border border-gray-100 bg-white shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] relative overflow-visible reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}
     >
       {/* 🚀 Interactive Shine Effect */}
-      <div 
+      <div
         className="pointer-events-none absolute -inset-px transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-[48px]"
         style={{ background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,127,50,0.04), transparent 40%)` }}
       />
@@ -76,7 +76,7 @@ export default function AddPropertyForm() {
           {/* 📍 SECTION 1: BASIC DETAILS [Row Wise Layout] */}
           <div className="space-y-8">
             <h4 className={sectionHeader}><Info size={18} className="text-[#FF7F32]" /> Basic Property Details</h4>
-            
+
             {/* Title, Category, Purpose (2-column logic) */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               <div className="lg:col-span-6 space-y-2">
@@ -208,9 +208,9 @@ export default function AddPropertyForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div className="space-y-2">
               <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Description</Label>
-              <Textarea 
-                placeholder="Mention nearby landmarks, road connectivity, condition, etc." 
-                className="bg-gray-50 border-gray-200 rounded-[32px] p-6 min-h-[260px] text-sm text-[#1a2b49] focus:bg-white transition-all outline-none resize-none shadow-sm" 
+              <Textarea
+                placeholder="Mention nearby landmarks, road connectivity, condition, etc."
+                className="bg-gray-50 border-gray-200 rounded-[32px] p-6 min-h-[260px] text-sm text-[#1a2b49] focus:bg-white transition-all outline-none resize-none shadow-sm"
               />
             </div>
             <div className="space-y-2">
@@ -225,53 +225,53 @@ export default function AddPropertyForm() {
             </div>
           </div>
 
-{/* 👤 SECTION 5: SELLER CONTACT (Light SaaS Theme) */}
-<div className="bg-gray-50/50 p-8 md:p-12 rounded-[48px] border border-gray-100 shadow-sm relative overflow-hidden group/contact">
-  {/* Subtle Background Decoration */}
-  <div className="absolute -right-12 -bottom-12 text-gray-200/20 group-hover/contact:text-[#FF7F32]/5 transition-colors duration-700">
-    <ShieldCheck size={240} />
-  </div>
+          {/* 👤 SECTION 5: SELLER CONTACT (Light SaaS Theme) */}
+          <div className="bg-gray-50/50 p-8 md:p-12 rounded-[48px] border border-gray-100 shadow-sm relative overflow-hidden group/contact">
+            {/* Subtle Background Decoration */}
+            <div className="absolute -right-12 -bottom-12 text-gray-200/20 group-hover/contact:text-[#FF7F32]/5 transition-colors duration-700">
+              <ShieldCheck size={240} />
+            </div>
 
-  <div className="relative z-10">
-    <h4 className="flex items-center gap-3 text-[#1a2b49] font-black text-sm uppercase tracking-[0.2em] mb-10">
-      <div className="bg-[#FF7F32] p-2 rounded-lg text-white shadow-lg shadow-orange-500/20">
-        <User size={18} />
-      </div>
-      Seller Contact Info
-    </h4>
+            <div className="relative z-10">
+              <h4 className="flex items-center gap-3 text-[#1a2b49] font-black text-sm uppercase tracking-[0.2em] mb-10">
+                <div className="bg-[#FF7F32] p-2 rounded-lg text-white shadow-lg shadow-orange-500/20">
+                  <User size={18} />
+                </div>
+                Seller Contact Info
+              </h4>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
-      {/* Full Name */}
-      <div className="space-y-3">
-        <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Full Name</Label>
-        <Input 
-          placeholder="Enter your name" 
-          className="bg-white border-gray-200 text-[#1a2b49] rounded-2xl py-7 shadow-sm focus:ring-[#FF7F32]/10 focus:border-[#FF7F32] transition-all" 
-        />
-      </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+                {/* Full Name */}
+                <div className="space-y-3">
+                  <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Full Name</Label>
+                  <Input
+                    placeholder="Enter your name"
+                    className="bg-white border-gray-200 text-[#1a2b49] rounded-2xl py-7 shadow-sm focus:ring-[#FF7F32]/10 focus:border-[#FF7F32] transition-all"
+                  />
+                </div>
 
-      {/* Phone Number */}
-      <div className="space-y-3">
-        <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Phone Number</Label>
-        <Input 
-          placeholder="+91 XXXXX XXXXX" 
-          className="bg-white border-gray-200 text-[#1a2b49] rounded-2xl py-7 shadow-sm focus:ring-[#FF7F32]/10 focus:border-[#FF7F32] transition-all" 
-        />
-      </div>
+                {/* Phone Number */}
+                <div className="space-y-3">
+                  <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Phone Number</Label>
+                  <Input
+                    placeholder="+91 XXXXX XXXXX"
+                    className="bg-white border-gray-200 text-[#1a2b49] rounded-2xl py-7 shadow-sm focus:ring-[#FF7F32]/10 focus:border-[#FF7F32] transition-all"
+                  />
+                </div>
 
-      {/* WhatsApp Alert Toggle */}
-      <div className="flex items-center justify-between bg-white border border-gray-200 p-5 rounded-2xl h-[60px] shadow-sm hover:border-green-100 transition-colors">
-        <div className="flex items-center gap-3">
-          <div className="bg-green-50 p-2 rounded-full">
-            <Phone size={16} className="text-green-500" />
+                {/* WhatsApp Alert Toggle */}
+                <div className="flex items-center justify-between bg-white border border-gray-200 p-5 rounded-2xl h-[60px] shadow-sm hover:border-green-100 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green-50 p-2 rounded-full">
+                      <Phone size={16} className="text-green-500" />
+                    </div>
+                    <span className="text-[11px] font-black text-[#1a2b49] uppercase tracking-wider">WhatsApp Alert</span>
+                  </div>
+                  <Switch className="data-[state=checked]:bg-green-500" />
+                </div>
+              </div>
+            </div>
           </div>
-          <span className="text-[11px] font-black text-[#1a2b49] uppercase tracking-wider">WhatsApp Alert</span>
-        </div>
-        <Switch className="data-[state=checked]:bg-green-500" />
-      </div>
-    </div>
-  </div>
-</div>
 
           {/* CTA BUTTON */}
           <Button className="w-full bg-[#FF7F32] hover:bg-orange-600 text-white h-auto py-7 rounded-3xl font-black text-xl shadow-2xl shadow-orange-500/30 transition-all active:scale-[0.98] border-none group">

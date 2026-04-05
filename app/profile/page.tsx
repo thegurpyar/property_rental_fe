@@ -1,25 +1,25 @@
 "use client";
 
-import { useEffect,useState } from "react";
-import { 
-  User, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Edit3, 
-  Building2, 
-  Heart, 
-  Clock, 
+import { useEffect, useState } from "react";
+import {
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Edit3,
+  Building2,
+  Heart,
+  Clock,
   Plus,
   ChevronRight
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 
 import apiClient from "../../lib/apClient"
 export default function ProfilePage() {
 
-  
+
   const [userData, setUserData] = useState({
     name: "",
     phone: "",
@@ -27,14 +27,14 @@ export default function ProfilePage() {
     location: "",
     listingsCount: 0
   });
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await apiClient.get("/auth/me");
-  
+
         const user = res.data;
-  
+
         setUserData((prev) => ({
           ...prev,
           name: user.full_name,
@@ -44,7 +44,7 @@ export default function ProfilePage() {
         console.error("Failed to fetch user:", error);
       }
     };
-  
+
     fetchUser();
   }, []);
 
@@ -75,7 +75,7 @@ export default function ProfilePage() {
               <h1 className="text-5xl font-black text-[#1a2b49] tracking-tighter uppercase">{userData.name}</h1>
               <span className="bg-orange-100 text-[#FF7F32] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Premium Member</span>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 max-w-2xl">
               <div className="flex items-center gap-3 text-slate-500 font-bold text-sm">
                 <Phone size={18} className="text-[#FF7F32]" /> {userData.phone}

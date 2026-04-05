@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  ShieldCheck, 
-  CheckCircle2, 
-  XCircle, 
-  Eye, 
-  Search, 
-  Filter, 
+import {
+  ShieldCheck,
+  CheckCircle2,
+  XCircle,
+  Eye,
+  Search,
+  Filter,
   Clock,
   User,
   AlertTriangle,
@@ -62,7 +62,7 @@ export default function AdminApprovals() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      
+
       {/* 👑 Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
@@ -131,9 +131,9 @@ export default function AdminApprovals() {
                     </td>
                     <td className="px-8 py-6">
                       <Badge className={`
-                        ${item.risk === 'Low' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
-                          item.risk === 'Medium' ? 'bg-orange-50 text-[#FF7F32] border-orange-100' : 
-                          'bg-rose-50 text-rose-600 border-rose-100'}
+                        ${item.risk === 'Low' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                          item.risk === 'Medium' ? 'bg-orange-50 text-[#FF7F32] border-orange-100' :
+                            'bg-rose-50 text-rose-600 border-rose-100'}
                         font-black uppercase text-[9px] px-3 py-1 rounded-full border
                       `}>
                         {item.risk} Risk
@@ -164,7 +164,7 @@ export default function AdminApprovals() {
           </table>
         </div>
       </Card>
-      
+
 
     </div>
   );

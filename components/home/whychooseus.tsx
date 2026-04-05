@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Headphones, Timer, ShieldCheck } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "../ui/card";
 
 const FEATURES = [
   {
@@ -56,12 +56,12 @@ export default function WhyChooseUs() {
       {/* ── Features Grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
         {FEATURES.map((feature, idx) => (
-          <div 
+          <div
             key={idx}
             className={`reveal-hidden ${isVisible ? 'animate-spring' : ''}`}
             style={{ animationDelay: isVisible ? `${(idx + 1) * 200}ms` : '0ms' }}
           >
-            <Card 
+            <Card
               className="group border-none rounded-[48px] bg-white shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-4 hover:rotate-1"
             >
               <CardContent className="p-16 flex flex-col items-center text-center">
@@ -73,7 +73,7 @@ export default function WhyChooseUs() {
                   {/* Subtle pulsing ring on hover */}
                   <div className="absolute inset-0 rounded-[28px] bg-[#FF7F32] opacity-0 group-hover:animate-ping group-hover:opacity-20 transition-all" />
                 </div>
-                
+
                 <h3 className="text-2xl font-bold text-[#1a2b49] mb-4 tracking-tight">
                   {feature.title}
                 </h3>

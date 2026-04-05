@@ -3,13 +3,13 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Home, UserCircle2, ChevronDown, User, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
   const pathname = usePathname();
-  
+
   // ── 🛡️ Auth Check: Mocking Login State ──
-  const isLoggedIn = true; 
+  const isLoggedIn = true;
 
   const isExcluded = pathname.startsWith("/admin") || pathname === "/login";
   if (isExcluded) return null;
@@ -24,15 +24,15 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center justify-between px-8 md:px-16 py-2 bg-white backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
-      
+
       {/* 🚀 Brand Logo Section (Animated) */}
       <Link href="/" className="flex items-center group">
         <div className="flex items-center gap-3">
           {/* 🎯 ADDED: animate-float and hover:pause logic here */}
           <div className="animate-float hover:[animation-play-state:paused] w-auto h-20 bg-white rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:scale-105">
-            <img 
-              src="/logo.jpeg" 
-              alt="logo" 
+            <img
+              src="/logo.jpeg"
+              alt="logo"
               className="w-full h-full object-contain p-1"
             />
           </div>
@@ -44,9 +44,9 @@ export default function Navbar() {
         {navLinks.map((link) => {
           const isActive = pathname === link.href;
           return (
-            <Link 
+            <Link
               key={link.name}
-              href={link.href} 
+              href={link.href}
               className={`transition-colors relative group/link ${isActive ? "text-[#FF7F32]" : "hover:text-[#FF7F32]"}`}
             >
               {link.name}
@@ -58,7 +58,7 @@ export default function Navbar() {
 
       {/* 🔥 Action Group */}
       <div className="flex items-center gap-4">
-        
+
         {/* 👤 Profile Pill */}
         {isLoggedIn && (
           <Link href="/profile">
@@ -69,7 +69,7 @@ export default function Navbar() {
                   +91 98785 43210
                 </span>
               </div>
-              
+
               <div className="relative">
                 <div className="w-10 h-10 bg-[#FF7F32] rounded-[16px] flex items-center justify-center text-white shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
                   <User size={20} strokeWidth={2.5} />

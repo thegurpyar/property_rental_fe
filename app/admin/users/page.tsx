@@ -32,7 +32,7 @@ export default function UsersList() {
         number: "9012345678",
       },
     ];
-  
+
     // simulate API delay (optional but nice UX)
     setTimeout(() => {
       setUsers(dummyUsers);

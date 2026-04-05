@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  Building2, 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  CheckCircle2, 
-  XCircle, 
+import {
+  Building2,
+  Search,
+  Filter,
+  MoreVertical,
+  CheckCircle2,
+  XCircle,
   Clock,
   ExternalLink,
   Plus
@@ -75,7 +75,7 @@ export default function AdminProperties() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      
+
       {/* 👑 Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
@@ -95,8 +95,8 @@ export default function AdminProperties() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1 group">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#FF7F32] transition-colors" size={20} />
-          <input 
-            placeholder="Search by Title, Location, or UID..." 
+          <input
+            placeholder="Search by Title, Location, or UID..."
             className="w-full bg-white border border-orange-100 rounded-2xl py-4 pl-14 pr-6 text-sm font-bold text-[#1a2b49] outline-none focus:ring-4 focus:ring-orange-500/5 transition-all"
           />
         </div>
