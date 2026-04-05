@@ -13,8 +13,8 @@ import {
   Plus,
   ChevronRight
 } from "lucide-react";
-import { Card, CardContent } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 import apiClient from "../../lib/apClient"
 export default function ProfilePage() {

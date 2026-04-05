@@ -8,7 +8,6 @@ const apiClient = axios.create({
   },
 });
 
-// ✅ Exclude both verify-otp and refresh from auth header
 apiClient.interceptors.request.use((config) => {
   const token = Cookies.get("accessToken");
 

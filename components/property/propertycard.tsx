@@ -1,7 +1,7 @@
 import { Bed, Bath, Square, MapPin, Bookmark, Plus } from "lucide-react";
 import Image from "next/image";
-import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface PropertyProps {
   image: string;
