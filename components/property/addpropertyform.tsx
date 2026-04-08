@@ -17,23 +17,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 export default function AddPropertyForm() {
-  const [isVisible, setIsVisible] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // ── Animation Logic ──
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
@@ -49,7 +34,7 @@ export default function AddPropertyForm() {
     <Card
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className={`group rounded-[48px] border border-gray-100 bg-white shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] relative overflow-visible reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}
+      className="group rounded-[48px] border border-gray-100 bg-white shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] relative overflow-visible"
     >
       {/* 🚀 Interactive Shine Effect */}
       <div
