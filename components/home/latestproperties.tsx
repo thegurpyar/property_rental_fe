@@ -73,38 +73,38 @@ export default function LatestProperties() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-16 bg-white overflow-hidden">
+    <section ref={sectionRef} className="py-12 sm:py-20 md:py-28 px-4 sm:px-8 md:px-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
         {/* --- Header Section --- */}
         <div className={`flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6 mb-10 sm:mb-14 md:mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
           <div className="max-w-xl">
-            <h2 className="text-[30px] sm:text-[38px] md:text-[48px] font-bold text-[#1a2b49] leading-tight mb-3 md:mb-4 tracking-tighter">
+            <h2 className="text-[28px] sm:text-[40px] md:text-[52px] font-black text-[#1a2b49] leading-[1.1] mb-2 sm:mb-4 tracking-tighter">
               Latest <span className="text-[#FF7F32]">properties</span>
             </h2>
-            <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-md font-medium">
+            <p className="text-gray-400 text-xs sm:text-base leading-relaxed max-w-md font-medium">
               We have completed several housing, villa and property orders with our professional team, at costs that suit you.
             </p>
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center gap-4 sm:gap-6 pb-0 sm:pb-2">
+          <div className="flex items-center gap-3 sm:gap-6 pb-0 sm:pb-2">
             <Button
               variant="outline"
               size="icon"
-              className="w-11 h-11 sm:w-14 sm:h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
+              className="w-10 h-10 sm:w-14 sm:h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={16} />
             </Button>
 
-            <span className="font-black text-[#1a2b49] text-xs tracking-[0.3em]">01/03</span>
+            <span className="font-black text-[#1a2b49] text-[10px] sm:text-xs tracking-[0.3em]">01/03</span>
 
             <Button
               variant="outline"
               size="icon"
-              className="w-11 h-11 sm:w-14 sm:h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
+              className="w-10 h-10 sm:w-14 sm:h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
             >
-              <ArrowRight size={18} />
+              <ArrowRight size={16} />
             </Button>
           </div>
         </div>

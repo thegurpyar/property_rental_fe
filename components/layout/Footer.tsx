@@ -19,8 +19,8 @@ const WhatsappIcon = ({ className }: { className?: string }) => (
 
 export default function Footer() {
   return (
-    <footer className="bg-white px-16 pt-24 pb-10 border-t border-gray-100">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-20">
+    <footer className="bg-white px-6 sm:px-10 md:px-16 pt-16 sm:pt-24 pb-8 sm:pb-10 border-t border-gray-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 sm:gap-16 mb-12 sm:mb-20">
         <div className="lg:col-span-4">
           <h2 className="text-2xl font-bold text-[#1a2b49] mb-8">PropertyPro</h2>
           <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
@@ -47,14 +47,14 @@ export default function Footer() {
         </div>
 
         <div className="lg:col-span-4">
-          <h4 className="font-bold text-[#1a2b49] mb-8">Subscribe to follow</h4>
-          <div className="flex bg-gray-50 rounded-full p-1 mb-8">
+          <h4 className="font-black text-[#1a2b49] mb-6 sm:mb-8 uppercase tracking-widest text-xs">Subscribe to follow</h4>
+          <div className="flex flex-col sm:flex-row bg-gray-50 rounded-2xl sm:rounded-full p-1 mb-6 sm:mb-8">
             <input 
               type="email" 
               placeholder="Your email....." 
-              className="bg-transparent border-none focus:ring-0 px-6 py-3 text-sm flex-1 outline-none text-gray-400" 
+              className="bg-transparent border-none focus:ring-0 px-6 py-4 sm:py-3 text-sm flex-1 outline-none text-gray-400 font-bold" 
             />
-            <button className="bg-[#0a1629] text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg">
+            <button className="bg-[#0a1629] text-white px-8 py-4 sm:py-3 rounded-xl sm:rounded-full text-sm font-black shadow-lg hover:bg-orange-600 transition-colors">
               Subscribe
             </button>
           </div>

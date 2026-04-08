@@ -41,35 +41,37 @@ export default function PropertyCategorySection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-20 bg-white overflow-hidden">
+    <section ref={sectionRef} className="py-12 sm:py-20 md:py-28 px-4 sm:px-8 lg:px-20 bg-white overflow-hidden">
       <Tabs defaultValue="House" className="flex flex-col w-full gap-0">
 
         {/* ── ROW 1: Header (Animated) ── */}
         <div className={`flex flex-col md:flex-row md:items-start md:justify-between w-full gap-6 mb-10 sm:mb-12 md:mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
           <div className="max-w-xl">
-            <h2 className="text-[28px] sm:text-[36px] md:text-[44px] font-extrabold text-[#1a2b49] leading-tight tracking-tighter mb-3 md:mb-4">
+            <h2 className="text-[28px] sm:text-[40px] md:text-[52px] font-black text-[#1a2b49] leading-[1.1] tracking-tighter mb-2 sm:mb-4">
               Property Category
             </h2>
-            <p className="text-[13px] sm:text-[14px] text-gray-400 leading-relaxed max-w-md font-medium">
+            <p className="text-[12px] sm:text-[14px] text-gray-400 leading-relaxed max-w-md font-medium">
               Explore our diverse range of properties tailored to fit every lifestyle and preference.
             </p>
           </div>
 
-          {/* Right: Pill Tabs */}
-          <TabsList className="flex flex-wrap items-center rounded-full bg-white border border-gray-100 shadow-sm px-1.5 py-1.5 gap-1 h-auto w-fit">
-            {categories.map((cat) => (
-              <TabsTrigger
-                key={cat}
-                value={cat}
-                className="px-5 py-2 sm:px-8 sm:py-2.5 rounded-full text-[12px] sm:text-[13px] font-bold text-gray-400 transition-all
-                           data-[state=active]:bg-[#1a2b49]
-                           data-[state=active]:text-white
-                           data-[state=active]:shadow-lg"
-              >
-                {cat}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          {/* Right: Pill Tabs (Scrollable on mobile) */}
+          <div className="overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
+            <TabsList className="flex items-center rounded-full bg-white border border-gray-100 shadow-sm px-1.5 py-1.5 gap-1 h-auto w-fit whitespace-nowrap">
+              {categories.map((cat) => (
+                <TabsTrigger
+                  key={cat}
+                  value={cat}
+                  className="px-5 py-2 sm:px-8 sm:py-2.5 rounded-full text-[11px] sm:text-[13px] font-bold text-gray-400 transition-all
+                             data-[state=active]:bg-[#1a2b49]
+                             data-[state=active]:text-white
+                             data-[state=active]:shadow-lg"
+                >
+                  {cat}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
 
         {/* ── ROW 2: Cards Grid (Animated Waterfall) ── */}

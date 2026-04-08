@@ -42,13 +42,13 @@ export default function WhyChooseUs() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-16 bg-[#F5F7FA] overflow-hidden">
+    <section ref={sectionRef} className="py-16 sm:py-24 md:py-32 px-4 sm:px-8 md:px-16 bg-[#F5F7FA] overflow-hidden">
       {/* ── Header Section ── */}
       <div className={`text-center mb-10 sm:mb-14 md:mb-20 reveal-hidden ${isVisible ? 'animate-spring' : ''}`}>
         <p className="text-[#FF7F32] font-black text-[10px] uppercase tracking-[0.4em] mb-3 md:mb-4">
           Why PropertyPro
         </p>
-        <h2 className="text-[30px] sm:text-[40px] md:text-[56px] font-extrabold text-[#1a2b49] leading-none tracking-tighter">
+        <h2 className="text-[28px] sm:text-[40px] md:text-[56px] font-black text-[#1a2b49] leading-[1.1] tracking-tighter">
           Built for Rent &amp; Owners
         </h2>
       </div>
@@ -64,7 +64,7 @@ export default function WhyChooseUs() {
             <Card
               className="group border-none rounded-[32px] sm:rounded-[40px] md:rounded-[48px] bg-white shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-4 hover:rotate-1"
             >
-              <CardContent className="p-8 sm:p-12 md:p-16 flex flex-col items-center text-center">
+              <CardContent className="p-8 sm:p-10 md:p-16 flex flex-col items-center text-center">
                 {/* Icon Wrapper with Glow */}
                 <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-[20px] sm:rounded-[24px] md:rounded-[28px] bg-[#F5F7FA] flex items-center justify-center mb-6 sm:mb-8 md:mb-10 group-hover:bg-[#FF7F32] transition-colors duration-500 relative">
                   <div className="relative z-10 group-hover:text-white transition-colors">
