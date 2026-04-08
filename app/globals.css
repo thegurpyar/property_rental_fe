@@ -55,26 +55,14 @@
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-.animate-float { animation: float 3s ease-in-out infinite; }
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+  50% { transform: translateY(-5px); }
 }
 
-/* Pulse Soft for Buttons */
 @keyframes pulse-soft {
   0%, 100% { box-shadow: 0 10px 15px -3px rgba(255, 127, 50, 0.3); }
   50% { box-shadow: 0 20px 25px -5px rgba(255, 127, 50, 0.5); }
 }
-.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
 
-.animate-pulse-soft {
-  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* globals.css */
 @keyframes fade-breathing {
   0%, 100% { 
     opacity: 1;
@@ -86,15 +74,10 @@
   }
 }
 
-.animate-fade-pulse {
-  animation: fade-breathing 2s ease-in-out infinite;
-}
-
-/* globals.css */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -104,59 +87,31 @@
 
 @keyframes slowZoom {
   from { transform: scale(1); }
-  to { transform: scale(1.1); }
+  to { transform: scale(1.05); }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.animate-slow-zoom {
-  animation: slowZoom 20s linear infinite alternate;
-}
+.animate-float { animation: float 2s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 1.5s ease-in-out infinite; }
+.animate-fade-pulse { animation: fade-breathing 1.5s ease-in-out infinite; }
+.animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+.animate-slow-zoom { animation: slowZoom 12s linear infinite alternate; }
 
 /* Stagger delays */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-500 { animation-delay: 0.5s; }
+.delay-100 { animation-delay: 0.05s; }
+.delay-200 { animation-delay: 0.1s; }
+.delay-300 { animation-delay: 0.15s; }
+.delay-500 { animation-delay: 0.25s; }
 
-/* globals.css */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* globals.css */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 1. Initial State: Items are invisible and moved down */
+/* Scroll Reveal Classes */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(20px);
   will-change: transform, opacity;
 }
 
 /* 2. Active State (When visible) */
 .reveal-on-scroll.animate-active {
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
 /* globals.css */
@@ -176,7 +131,7 @@
 }
 
 .animate-spring {
-  animation: springReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: springReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .reveal-hidden {
@@ -196,11 +151,11 @@
 }
 
 .animate-slide-left {
-  animation: slideInLeft 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: slideInLeft 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .animate-slide-right {
-  animation: slideInRight 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: slideInRight 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* A soft breathing animation specifically for the floating buttons */
@@ -210,7 +165,7 @@
 }
 
 .animate-cta-float {
-  animation: cta-float 3s ease-in-out infinite;
+  animation: cta-float 2s ease-in-out infinite;
 }
 
 /* globals.css */

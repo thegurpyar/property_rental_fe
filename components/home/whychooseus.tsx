@@ -23,28 +23,12 @@ const FEATURES = [
 ];
 
 export default function WhyChooseUs() {
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (sectionRef.current) observer.unobserve(sectionRef.current);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section ref={sectionRef} className="py-16 sm:py-24 md:py-32 px-4 sm:px-8 md:px-16 bg-[#F5F7FA] overflow-hidden">
       {/* ── Header Section ── */}
-      <div className={`text-center mb-10 sm:mb-14 md:mb-20 reveal-hidden ${isVisible ? 'animate-spring' : ''}`}>
+      <div className="text-center mb-10 sm:mb-14 md:mb-20 animate-spring">
         <p className="text-[#FF7F32] font-black text-[10px] uppercase tracking-[0.4em] mb-3 md:mb-4">
           Why PropertyPro
         </p>
@@ -58,8 +42,8 @@ export default function WhyChooseUs() {
         {FEATURES.map((feature, idx) => (
           <div
             key={idx}
-            className={`reveal-hidden ${isVisible ? 'animate-spring' : ''}`}
-            style={{ animationDelay: isVisible ? `${(idx + 1) * 200}ms` : '0ms' }}
+            className="animate-spring"
+            style={{ animationDelay: `${(idx + 1) * 100}ms` }}
           >
             <Card
               className="group border-none rounded-[32px] sm:rounded-[40px] md:rounded-[48px] bg-white shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-4 hover:rotate-1"

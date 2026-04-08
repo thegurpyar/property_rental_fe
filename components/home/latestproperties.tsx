@@ -49,35 +49,14 @@ const SAMPLE_PROPERTIES = [
 ];
 
 export default function LatestProperties() {
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Trigger only when the section enters the view
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          // Stop observing once the animation is triggered
-          if (sectionRef.current) observer.unobserve(sectionRef.current);
-        }
-      },
-      {
-        threshold: 0.15, // Trigger when 15% of the section is visible
-        rootMargin: "0px 0px -50px 0px"
-      }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section ref={sectionRef} className="py-12 sm:py-20 md:py-28 px-4 sm:px-8 md:px-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
         {/* --- Header Section --- */}
-        <div className={`flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6 mb-10 sm:mb-14 md:mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6 mb-10 sm:mb-14 md:mb-16 animate-fade-in-up">
           <div className="max-w-xl">
             <h2 className="text-[28px] sm:text-[40px] md:text-[52px] font-black text-[#1a2b49] leading-[1.1] mb-2 sm:mb-4 tracking-tighter">
               Latest <span className="text-[#FF7F32]">properties</span>
@@ -114,10 +93,10 @@ export default function LatestProperties() {
           {SAMPLE_PROPERTIES.map((property, index) => (
             <div
               key={index}
-              className={`reveal-on-scroll ${isVisible ? 'animate-active' : ''} hover:-translate-y-3 transition-transform duration-500`}
+              className="animate-fade-in-up hover:-translate-y-3 transition-transform duration-500"
               style={{
-                // Creating the Waterfall effect: Each card waits a bit longer
-                animationDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms'
+                // Creating the Waterfall effect on load
+                animationDelay: `${(index + 1) * 100}ms`
               }}
             >
               <PropertyCard property={property} />

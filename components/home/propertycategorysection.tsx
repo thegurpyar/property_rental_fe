@@ -16,7 +16,6 @@ const CATEGORY_PROPERTIES = [
 ];
 
 export default function PropertyCategorySection() {
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   const categories: Array<"House" | "Villa" | "Apartment"> = [
@@ -25,27 +24,12 @@ export default function PropertyCategorySection() {
     "Apartment",
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (sectionRef.current) observer.unobserve(sectionRef.current);
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section ref={sectionRef} className="py-12 sm:py-20 md:py-28 px-4 sm:px-8 lg:px-20 bg-white overflow-hidden">
       <Tabs defaultValue="House" className="flex flex-col w-full gap-0">
 
         {/* ── ROW 1: Header (Animated) ── */}
-        <div className={`flex flex-col md:flex-row md:items-start md:justify-between w-full gap-6 mb-10 sm:mb-12 md:mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between w-full gap-6 mb-10 sm:mb-12 md:mb-16 animate-fade-in-up">
           <div className="max-w-xl">
             <h2 className="text-[28px] sm:text-[40px] md:text-[52px] font-black text-[#1a2b49] leading-[1.1] tracking-tighter mb-2 sm:mb-4">
               Property Category
@@ -87,9 +71,9 @@ export default function PropertyCategorySection() {
                   (property, idx) => (
                     <div 
                       key={`${cat}-${idx}`}
-                      className={`reveal-on-scroll ${isVisible ? 'animate-active' : ''} hover:-translate-y-3 transition-transform duration-500`}
+                      className="animate-fade-in-up hover:-translate-y-3 transition-transform duration-500"
                       style={{ 
-                        animationDelay: isVisible ? `${(idx + 1) * 150}ms` : '0ms' 
+                        animationDelay: `${(idx + 1) * 100}ms` 
                       }}
                     >
                       <PropertyCard property={property} />
