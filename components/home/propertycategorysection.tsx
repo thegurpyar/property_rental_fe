@@ -41,27 +41,27 @@ export default function PropertyCategorySection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 px-6 lg:px-20 bg-white overflow-hidden">
+    <section ref={sectionRef} className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-20 bg-white overflow-hidden">
       <Tabs defaultValue="House" className="flex flex-col w-full gap-0">
 
         {/* ── ROW 1: Header (Animated) ── */}
-        <div className={`flex flex-col md:flex-row items-start justify-between w-full mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
-          <div className="max-w-xl mb-8 md:mb-0">
-            <h2 className="text-[44px] font-extrabold text-[#1a2b49] leading-tight tracking-tighter mb-4">
+        <div className={`flex flex-col md:flex-row md:items-start md:justify-between w-full gap-6 mb-10 sm:mb-12 md:mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
+          <div className="max-w-xl">
+            <h2 className="text-[28px] sm:text-[36px] md:text-[44px] font-extrabold text-[#1a2b49] leading-tight tracking-tighter mb-3 md:mb-4">
               Property Category
             </h2>
-            <p className="text-[14px] text-gray-400 leading-relaxed max-w-md font-medium">
+            <p className="text-[13px] sm:text-[14px] text-gray-400 leading-relaxed max-w-md font-medium">
               Explore our diverse range of properties tailored to fit every lifestyle and preference.
             </p>
           </div>
 
           {/* Right: Pill Tabs */}
-          <TabsList className="flex items-center rounded-full bg-white border border-gray-100 shadow-sm px-1.5 py-1.5 gap-1 h-auto">
+          <TabsList className="flex flex-wrap items-center rounded-full bg-white border border-gray-100 shadow-sm px-1.5 py-1.5 gap-1 h-auto w-fit">
             {categories.map((cat) => (
               <TabsTrigger
                 key={cat}
                 value={cat}
-                className="px-8 py-2.5 rounded-full text-[13px] font-bold text-gray-400 transition-all
+                className="px-5 py-2 sm:px-8 sm:py-2.5 rounded-full text-[12px] sm:text-[13px] font-bold text-gray-400 transition-all
                            data-[state=active]:bg-[#1a2b49]
                            data-[state=active]:text-white
                            data-[state=active]:shadow-lg"
@@ -80,7 +80,7 @@ export default function PropertyCategorySection() {
               value={cat}
               className="mt-0 data-[state=inactive]:hidden focus-visible:outline-none"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-6 sm:gap-y-8 md:gap-y-10">
                 {CATEGORY_PROPERTIES.filter((p) => p.category === cat).map(
                   (property, idx) => (
                     <div 

@@ -36,13 +36,13 @@ export default function AdminDashboard() {
   }, [router]);
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-1000">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 md:space-y-10 animate-in fade-in duration-1000">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-black text-[#1a2b49] tracking-tighter">Control <span className="text-[#FF7F32]">Center</span></h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#1a2b49] tracking-tighter">Control <span className="text-[#FF7F32]">Center</span></h1>
           <p className="text-gray-400 font-bold uppercase tracking-[0.3em] text-[9px] mt-1">Authorized Access Only</p>
         </div>
-        <Button className="bg-[#1a2b49] hover:bg-black text-white rounded-2xl px-8 py-7 h-auto font-black text-xs uppercase tracking-widest shadow-2xl transition-all">
+        <Button className="bg-[#1a2b49] hover:bg-black text-white rounded-2xl px-6 py-5 sm:px-8 sm:py-7 h-auto font-black text-xs uppercase tracking-widest shadow-2xl transition-all w-fit">
           System Logs <TrendingUp size={16} className="ml-2" />
         </Button>
       </div>
@@ -54,16 +54,16 @@ export default function AdminDashboard() {
       </div>
 
       {/* Engine Status Banner */}
-      <Card className="rounded-[48px] border-none bg-gradient-to-br from-[#FF7F32] to-[#FF9D5C] p-12 text-white shadow-3xl relative overflow-hidden">
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="max-w-md">
-            <h2 className="text-4xl font-black tracking-tight mb-4">Engine Active</h2>
+      <Card className="rounded-[32px] md:rounded-[48px] border-none bg-gradient-to-br from-[#FF7F32] to-[#FF9D5C] p-6 sm:p-8 md:p-12 text-white shadow-3xl relative overflow-hidden">
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-10">
+          <div className="max-w-md text-center md:text-left">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight mb-2 md:mb-4">Engine Active</h2>
             <p className="text-white/70 font-medium text-sm leading-relaxed">
               Global property database and authentication clusters are running with 100% integrity.
             </p>
           </div>
-          <div className="bg-white/10 p-10 rounded-[40px] backdrop-blur-2xl border border-white/10 text-center">
-            <div className="text-5xl font-black text-white mb-1 tracking-tighter">99.9%</div>
+          <div className="bg-white/10 p-6 sm:p-8 md:p-10 rounded-[28px] md:rounded-[40px] backdrop-blur-2xl border border-white/10 text-center w-full md:w-auto">
+            <div className="text-4xl sm:text-5xl font-black text-white mb-1 tracking-tighter">99.9%</div>
             <div className="text-[10px] font-black uppercase tracking-widest text-white/40">Uptime Stability</div>
           </div>
         </div>

@@ -73,28 +73,28 @@ export default function LatestProperties() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 px-6 md:px-16 bg-white overflow-hidden">
+    <section ref={sectionRef} className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
         {/* --- Header Section --- */}
-        <div className={`flex justify-between items-end mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
+        <div className={`flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6 mb-10 sm:mb-14 md:mb-16 reveal-on-scroll ${isVisible ? 'animate-active' : ''}`}>
           <div className="max-w-xl">
-            <h2 className="text-[48px] font-bold text-[#1a2b49] leading-tight mb-4 tracking-tighter">
+            <h2 className="text-[30px] sm:text-[38px] md:text-[48px] font-bold text-[#1a2b49] leading-tight mb-3 md:mb-4 tracking-tighter">
               Latest <span className="text-[#FF7F32]">properties</span>
             </h2>
-            <p className="text-gray-400 text-base leading-relaxed max-w-md font-medium">
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-md font-medium">
               We have completed several housing, villa and property orders with our professional team, at costs that suit you.
             </p>
           </div>
 
-          {/* Navigation Buttons (Shadcn) */}
-          <div className="hidden md:flex items-center gap-6 pb-2">
+          {/* Navigation Buttons */}
+          <div className="flex items-center gap-4 sm:gap-6 pb-0 sm:pb-2">
             <Button
               variant="outline"
               size="icon"
-              className="w-14 h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
+              className="w-11 h-11 sm:w-14 sm:h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={18} />
             </Button>
 
             <span className="font-black text-[#1a2b49] text-xs tracking-[0.3em]">01/03</span>
@@ -102,15 +102,15 @@ export default function LatestProperties() {
             <Button
               variant="outline"
               size="icon"
-              className="w-14 h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
+              className="w-11 h-11 sm:w-14 sm:h-14 border-gray-100 rounded-full hover:bg-[#1a2b49] hover:text-white transition-all shadow-none active:scale-90"
             >
-              <ArrowRight size={20} />
+              <ArrowRight size={18} />
             </Button>
           </div>
         </div>
 
         {/* --- Properties Grid --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8">
           {SAMPLE_PROPERTIES.map((property, index) => (
             <div
               key={index}
