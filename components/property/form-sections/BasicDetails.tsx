@@ -19,12 +19,12 @@ export function BasicDetails({ formData, handleInputChange, handleSelectChange }
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-6 space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Property Title</Label>
-          <Input 
+          <Input
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            placeholder="e.g. 3BHK Flat in Sector 70 Mohali" 
-            className={inputBase} 
+            placeholder="e.g. 3BHK Flat in Sector 70 Mohali"
+            className={inputBase}
             required
           />
         </div>
@@ -54,54 +54,54 @@ export function BasicDetails({ formData, handleInputChange, handleSelectChange }
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Price (₹)</Label>
-          <Input 
+          <Input
             name="price"
-            type="number" 
+            type="number"
             min="0"
             value={formData.price}
             onChange={handleInputChange}
-            placeholder="e.g. 25000" 
-            className={inputBase} 
+            placeholder="e.g. 25000"
+            className={inputBase}
             required
           />
         </div>
         <div className="space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">BHK</Label>
-          <Input 
+          <Input
             name="bhk"
-            type="number" 
+            type="number"
             min="1"
             value={formData.bhk}
             onChange={handleInputChange}
-            placeholder="Beds" 
-            className={inputBase} 
+            placeholder="Beds"
+            className={inputBase}
             required
           />
         </div>
         <div className="space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Bathrooms</Label>
-          <Input 
+          <Input
             name="bathrooms"
-            type="number" 
+            type="number"
             min="1"
             value={formData.bathrooms}
             onChange={handleInputChange}
-            placeholder="Baths" 
-            className={inputBase} 
+            placeholder="Baths"
+            className={inputBase}
             required
           />
         </div>
         <div className="space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Total Area</Label>
           <div className="flex gap-2">
-            <Input 
+            <Input
               name="totalArea"
               type="number"
               min="1"
               value={formData.totalArea}
               onChange={handleInputChange}
-              placeholder="Size" 
-              className="bg-gray-50 border-gray-200 rounded-xl px-4 py-6 text-sm flex-1 focus:bg-white transition-all outline-none" 
+              placeholder="Size"
+              className="bg-gray-50 border-gray-200 rounded-xl px-4 py-6 text-sm flex-1 focus:bg-white transition-all outline-none"
               required
             />
             <Select value={formData.areaUnit} onValueChange={(v) => handleSelectChange("areaUnit", v)}>

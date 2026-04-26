@@ -141,24 +141,24 @@ export default function LatestProperties() {
                   />
                </div>
                <div className="h-10 w-[1px] bg-slate-100 hidden sm:block" />
-               <div className="w-full sm:w-auto px-4 py-2 sm:py-0">
+               <div className="w-full sm:w-auto px-2">
                   <Select onValueChange={(v) => handleFilterChange("category", v)} value={filters.category}>
-                    <SelectTrigger className="h-16 border-none bg-transparent focus:ring-0 font-black text-[10px] uppercase tracking-widest text-[#1a2b49] gap-4 w-full sm:w-48">
-                      <div className="flex items-center gap-2">
-                        <Home size={14} className="text-[#FF7F32]" />
+                    <SelectTrigger className="h-12 sm:h-14 rounded-2xl bg-slate-50/50 border-none hover:bg-slate-100/50 focus:ring-0 font-black text-[10px] uppercase tracking-widest text-[#1a2b49] px-6 w-full sm:w-48 group transition-all">
+                      <div className="flex items-center gap-3">
+                        <Home size={16} className="text-[#FF7F32] group-hover:scale-110 transition-transform" />
                         <SelectValue placeholder="Category" />
                       </div>
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl border-slate-100 shadow-2xl">
-                       <SelectItem value="all" className="font-bold">All Types</SelectItem>
+                    <SelectContent className="rounded-2xl border-slate-100 shadow-2xl p-1 bg-white/95 backdrop-blur-xl z-[100]">
+                       <SelectItem value="all" className="rounded-xl font-bold py-3 focus:bg-orange-50 focus:text-[#FF7F32]">All Types</SelectItem>
                        {["flat", "apartment", "house", "villa", "studio", "pg", "shop", "office", "plot", "warehouse"].map(cat => (
-                          <SelectItem key={cat} value={cat} className="font-bold capitalize">{cat}</SelectItem>
+                          <SelectItem key={cat} value={cat} className="rounded-xl font-bold py-3 focus:bg-orange-50 focus:text-[#FF7F32] capitalize">{cat}</SelectItem>
                         ))}
                     </SelectContent>
                   </Select>
                </div>
-               <Button className="h-14 w-full sm:w-14 rounded-[28px] bg-[#1a2b49] text-white p-0 hover:bg-[#FF7F32] transition-all">
-                  <Search size={20} />
+               <Button className="h-12 w-full sm:w-14 sm:h-14 rounded-2xl sm:rounded-[28px] bg-[#1a2b49] text-white p-0 hover:bg-[#FF7F32] transition-all shadow-lg shadow-slate-900/10">
+                  <Search size={22} />
                </Button>
             </div>
           </div>
@@ -181,13 +181,13 @@ export default function LatestProperties() {
 
              {/* Config Select */}
              <Select onValueChange={(v) => handleFilterChange("bhk", v)} value={filters.bhk}>
-                <SelectTrigger className="w-auto h-12 px-8 rounded-full bg-slate-50/50 border-orange-100/50 shadow-sm text-[11px] font-black uppercase tracking-[0.2em] text-[#1a2b49] hover:bg-white hover:border-orange-300 transition-all duration-300 group">
+                <SelectTrigger className="w-auto h-12 px-8 rounded-2xl bg-white border border-slate-100 shadow-sm text-[11px] font-black uppercase tracking-[0.2em] text-[#1a2b49] hover:bg-slate-50 hover:border-orange-300 transition-all duration-300 group">
                    <div className="flex items-center gap-3">
-                      <Layers size={16} className="text-slate-400 group-hover:text-[#FF7F32] transition-colors" />
+                      <Layers size={16} className="text-[#FF7F32] group-hover:scale-110 transition-transform" />
                       <SelectValue placeholder="BHK" />
                    </div>
                 </SelectTrigger>
-                <SelectContent className="rounded-2xl border-slate-100 shadow-2xl p-1 bg-white/95 backdrop-blur-xl">
+                <SelectContent className="rounded-2xl border-slate-100 shadow-2xl p-1 bg-white/95 backdrop-blur-xl z-[100]">
                     <SelectItem value="all" className="rounded-xl font-bold py-3 focus:bg-orange-50 focus:text-[#FF7F32]">Any BHK</SelectItem>
                     {[1,2,3,4,5].map(b => (
                       <SelectItem key={b} value={b.toString()} className="rounded-xl font-bold py-3 focus:bg-orange-50 focus:text-[#FF7F32]">{b} BHK</SelectItem>

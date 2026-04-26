@@ -22,7 +22,7 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
     if (!formData.city) return [];
     const cityData = TRICITY_MAP[formData.city as keyof typeof TRICITY_MAP];
     if (!cityData) return [];
-    
+
     return cityData.sectors.map(s => {
       if (typeof s === 'number') return `Sector ${s}`;
       return s;
@@ -49,7 +49,7 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
   return (
     <div className="space-y-8">
       <h4 className={sectionHeader}><MapPin size={18} className="text-[#FF7F32]" /> Location Details</h4>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* City Selection */}
         <div className="space-y-2">
@@ -72,7 +72,7 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
         <div className="space-y-2 relative">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Sector / Area</Label>
           <div className="relative group">
-            <Input 
+            <Input
               name="sector"
               value={isSectorOpen ? sectorSearch : formData.sector}
               onChange={(e) => {
@@ -80,7 +80,7 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
                 if (!isSectorOpen) setIsSectorOpen(true);
               }}
               onFocus={() => setIsSectorOpen(true)}
-              placeholder={formData.city ? "Search or Type Sector..." : "Select city first"} 
+              placeholder={formData.city ? "Search or Type Sector..." : "Select city first"}
               className={`${inputBase} pr-10`}
               disabled={!formData.city}
               autoComplete="off"
@@ -92,12 +92,12 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
             {/* Dropdown Results */}
             {isSectorOpen && formData.city && (
               <>
-                <div 
-                  className="fixed inset-0 z-40" 
+                <div
+                  className="fixed inset-0 z-40"
                   onClick={() => {
                     setIsSectorOpen(false);
                     setSectorSearch("");
-                  }} 
+                  }}
                 />
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl max-h-[300px] overflow-y-auto z-50 py-2 custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-200">
                   {filteredSectors.length > 0 ? (
@@ -118,9 +118,9 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
                         No sectors found for <br />
                         <span className="text-[#FF7F32]">"{sectorSearch}"</span>
                       </p>
-                      <button 
-                         onClick={() => handleSectorSelect(sectorSearch)}
-                         className="mt-4 text-[10px] font-black text-[#FF7F32] uppercase tracking-[0.2em] hover:underline"
+                      <button
+                        onClick={() => handleSectorSelect(sectorSearch)}
+                        className="mt-4 text-[10px] font-black text-[#FF7F32] uppercase tracking-[0.2em] hover:underline"
                       >
                         Use "{sectorSearch}" anyway
                       </button>
@@ -135,12 +135,12 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
         {/* Locality */}
         <div className="space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Locality</Label>
-          <Input 
+          <Input
             name="locality"
             value={formData.locality}
             onChange={handleInputChange}
-            placeholder="e.g. Rohini" 
-            className={inputBase} 
+            placeholder="e.g. Rohini"
+            className={inputBase}
             required
           />
         </div>
@@ -148,24 +148,24 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
         {/* Landmark */}
         <div className="space-y-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Landmark</Label>
-          <Input 
+          <Input
             name="landmark"
             value={formData.landmark}
             onChange={handleInputChange}
-            placeholder="Near Metro Station" 
-            className={inputBase} 
+            placeholder="Near Metro Station"
+            className={inputBase}
           />
         </div>
 
         {/* Full Address - Spans full width if needed, but keeping it 2-col consistent */}
         <div className="space-y-2 md:col-span-2">
           <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">Full Address</Label>
-          <Input 
+          <Input
             name="fullAddress"
             value={formData.fullAddress}
             onChange={handleInputChange}
-            placeholder="Complete Address" 
-            className={inputBase} 
+            placeholder="Complete Address"
+            className={inputBase}
             required
           />
         </div>

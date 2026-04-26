@@ -88,7 +88,7 @@ export default function PropertyCard({ property }: { property: PropertyProps }) 
               <span className="text-[#FF7F32] font-black">
                 <Plus size={14} strokeWidth={4} />
               </span>
-              Compare
+              View
             </Button>
 
             <span className="text-gray-400 text-[11px] font-medium">
