@@ -197,7 +197,7 @@ export default function Navbar() {
       </div>
 
       {/* 📱 Mobile Menu Dropdown */}
-      <div className={`lg:hidden transition-all duration-500 ease-in-out overflow-hidden ${isMenuOpen ? 'max-h-[500px] border-t border-gray-100 opacity-100' : 'max-h-0 opacity-0'}`}>
+      <div className={`lg:hidden transition-all duration-500 ease-in-out overflow-hidden ${isMenuOpen ? 'max-h-[calc(100vh-80px)] border-t border-gray-100 opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'}`}>
         <div className="px-6 py-8 flex flex-col gap-6 bg-white shadow-2xl">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
@@ -221,17 +221,32 @@ export default function Navbar() {
                 </Button>
               </Link>
             ) : (
-              <Link href="/profile" onClick={() => setIsMenuOpen(false)}>
-                <div className="flex items-center gap-4 p-4 bg-orange-50 rounded-2xl">
-                  <div className="w-12 h-12 bg-[#FF7F32] rounded-xl flex items-center justify-center text-white">
-                    <User size={24} />
+              <>
+                <Link href="/profile" onClick={() => setIsMenuOpen(false)}>
+                  <div className="flex items-center gap-4 p-4 bg-orange-50 rounded-3xl border border-orange-100/50">
+                    <div className="w-14 h-14 bg-[#FF7F32] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
+                      <User size={28} strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <div className="font-black text-[#1a2b49] text-base">{userData?.name || "User"}</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{userData?.role || "User"} • {userData?.phone || ""}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-black text-[#1a2b49]">{userData?.name || "User"}</div>
-                    <div className="text-[10px] font-bold text-slate-400">{userData?.phone || ""}</div>
-                  </div>
-                </div>
-              </Link>
+                </Link>
+                
+                <button 
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center gap-4 w-full p-4 rounded-3xl hover:bg-rose-50 text-base font-black text-rose-500 transition-all group/logout"
+                >
+                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-rose-400 group-hover/logout:text-rose-500 shadow-sm border border-slate-100 group-hover/logout:border-rose-100 transition-all">
+                      <LogOut size={24} />
+                    </div>
+                    Sign Out Account
+                </button>
+              </>
             )}
           </div>
         </div>
