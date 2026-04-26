@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, KeyboardEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { ArrowRight, ArrowLeft, ShieldCheck, CheckCircle2, LayoutDashboard, User, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -12,6 +12,8 @@ import apiClient from "@/lib/apClient";
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const [step, setStep] = useState<"phone" | "otp" | "success">("phone");
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
@@ -174,8 +176,8 @@ export default function LoginForm() {
               <CheckCircle2 size={56} className="text-green-500" strokeWidth={2.5} />
             </div>
             <h2 className="text-3xl font-black text-[#1a2b49]">Welcome Back!</h2>
-            <Button onClick={() => router.push("/")} className="w-full bg-[#1a2b49] hover:bg-[#0a1629] text-white py-6 rounded-full font-black text-lg shadow-xl">
-              Go to Dashboard <LayoutDashboard size={18} className="ml-2" />
+            <Button onClick={() => router.push(callbackUrl || "/")} className="w-full bg-[#1a2b49] hover:bg-[#0a1629] text-white py-6 rounded-full font-black text-lg shadow-xl">
+              {callbackUrl ? "Continue Listing" : "Go to Dashboard"} <LayoutDashboard size={18} className="ml-2" />
             </Button>
           </div>
         )}

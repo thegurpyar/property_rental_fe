@@ -21,7 +21,7 @@ export default function FAQSection() {
           <AccordionItem value="item-3" className="border-b-gray-100 py-2">
             <AccordionTrigger className="text-lg font-bold text-[#0a1629] hover:no-underline">Can I edit my listing after it's live?</AccordionTrigger>
             <AccordionContent className="text-gray-500">
-              Yes, you can log in to your dashboard anytime to update prices, photos, or descriptions.
+              No, you can't edit your listing after it's live.
             </AccordionContent>
           </AccordionItem>
         </Accordion>

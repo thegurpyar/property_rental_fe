@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { Home, UserCircle2, ChevronDown, User, Phone, Loader2, Menu, X } from "lucide-react";
+import { Home, UserCircle2, ChevronDown, User, Phone, Loader2, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "../ui/button";
 import apiClient from "@/lib/apClient";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [userData, setUserData] = useState<{ name: string; phone: string } | null>(null);
+  const router = useRouter();
+  const [userData, setUserData] = useState<{ name: string; phone: string; role: string } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get("accessToken");
@@ -28,10 +31,15 @@ export default function Navbar() {
             setUserData({
               name: user.full_name,
               phone: user.number,
+              role: user.role,
             });
           }
         } catch (error) {
           console.error("Navbar: Failed to fetch user:", error);
+          if ((error as any).response?.status === 401) {
+            Cookies.remove("accessToken");
+            setIsLoggedIn(false);
+          }
         } finally {
           setLoading(false);
         }
@@ -40,9 +48,24 @@ export default function Navbar() {
     } else {
       setLoading(false);
     }
-    // Close menu on route change
     setIsMenuOpen(false);
-  }, [pathname]); // Refresh on route change
+    setShowProfileMenu(false);
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch (error) {
+      console.error("Logout API failed:", error);
+    } finally {
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      setIsLoggedIn(false);
+      setUserData(null);
+      router.push("/");
+      window.location.reload();
+    }
+  };
 
   const isExcluded = pathname.startsWith("/admin") || pathname === "/login";
   if (isExcluded) return null;
@@ -50,7 +73,7 @@ export default function Navbar() {
   // 🧭 Navigation Items Array
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Property", href: "/property" },
+    { name: "Properties", href: "/properties" },
     { name: "Approvals", href: "/approvals" },
     { name: "Contact", href: "/contact" },
   ];
@@ -90,14 +113,17 @@ export default function Navbar() {
           
           {/* 👤 Profile Pill (Dynamic) */}
           {isLoggedIn ? (
-            <Link href="/profile" className="hidden sm:block">
-              <div className="flex items-center gap-3   p-1.5 pl-4 rounded-[22px] cursor-pointer hover:bg-orange-100/50 transition-all group shadow-sm">
+            <div className="relative hidden sm:block">
+              <div 
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className={`flex items-center gap-3 p-1.5 pl-4 rounded-[22px] cursor-pointer transition-all group shadow-sm border ${showProfileMenu ? 'bg-orange-50 border-orange-200' : 'bg-white border-transparent hover:bg-orange-50/50'}`}
+              >
                 <div className="flex flex-col items-end pr-1">
                   <span className="text-[13px] font-black text-[#1a2b49] leading-none">
                     {userData?.name || (loading ? "Loading..." : "User")}
                   </span>
-                  <span className="text-[9px] font-bold text-slate-400 mt-1 flex items-center gap-1">
-                    {userData?.phone || (loading ? "..." : "")}
+                  <span className="text-[9px] font-bold text-slate-400 mt-1 flex items-center gap-1 uppercase tracking-tighter">
+                    {userData?.role || (loading ? "..." : "")} • {userData?.phone || ""}
                   </span>
                 </div>
                 
@@ -106,9 +132,40 @@ export default function Navbar() {
                     <User size={20} strokeWidth={2.5} />
                   </div>
                 </div>
-                <ChevronDown size={14} className="text-[#FF7F32] mr-1 group-hover:translate-y-0.5 transition-transform" />
+                <ChevronDown size={14} className={`text-[#FF7F32] mr-1 transition-transform duration-300 ${showProfileMenu ? 'rotate-180' : ''}`} />
               </div>
-            </Link>
+
+              {/* 📂 Minimal Profile & Logout Dropdown */}
+              {showProfileMenu && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setShowProfileMenu(false)} />
+                  <div className="absolute right-0 top-[110%] w-56 bg-white rounded-[28px] shadow-2xl shadow-orange-500/20 border border-slate-100 p-2 z-20 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <Link 
+                      href="/profile" 
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3.5 w-full p-4 rounded-2xl hover:bg-slate-50 text-[13px] font-black text-[#1a2b49] transition-all group/item"
+                    >
+                       <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover/item:text-[#FF7F32] group-hover/item:bg-white shadow-sm transition-all border border-transparent group-hover/item:border-orange-100">
+                          <User size={18} />
+                       </div>
+                       View Profile
+                    </Link>
+
+                    <div className="h-[1px] bg-slate-100/60 my-1 mx-2" />
+                    
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center gap-3.5 w-full p-4 rounded-2xl hover:bg-rose-50 text-[13px] font-black text-rose-500 transition-all group/logout"
+                    >
+                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-rose-400 group-hover/logout:text-rose-500 shadow-sm border border-slate-50 group-hover/logout:border-rose-100 transition-all">
+                          <LogOut size={18} />
+                        </div>
+                        Sign Out
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           ) : (
             /* 🔐 Login Button (Only shown when logged out) */
             <Link href="/login" className="hidden sm:block">
@@ -120,12 +177,14 @@ export default function Navbar() {
           )}
 
           {/* 🏠 Primary Action Button */}
-          <Button className="bg-[#FF7F32] hover:bg-[#e66a1f] text-white h-auto px-4 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3.5 rounded-full text-xs sm:text-sm font-black flex items-center gap-2 border-none transition-all shadow-lg shadow-orange-500/20 active:scale-95 group">
-            <span className="bg-white/20 p-1 sm:p-1.5 rounded-full group-hover:rotate-12 transition-transform duration-300">
-              <Home size={14} fill="currentColor" />
-            </span>
-            <span className="hidden md:inline">List Property</span>
-          </Button>
+          <Link href="/property">
+            <Button className="bg-[#FF7F32] hover:bg-[#e66a1f] text-white h-auto px-4 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3.5 rounded-full text-xs sm:text-sm font-black flex items-center gap-2 border-none transition-all shadow-lg shadow-orange-500/20 active:scale-95 group">
+              <span className="bg-white/20 p-1 sm:p-1.5 rounded-full group-hover:rotate-12 transition-transform duration-300">
+                <Home size={14} fill="currentColor" />
+              </span>
+              <span className="hidden md:inline">List Property</span>
+            </Button>
+          </Link>
 
           {/* 🍔 Hamburger Menu Button (Mobile Only) */}
           <button 

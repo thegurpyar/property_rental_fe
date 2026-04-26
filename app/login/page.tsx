@@ -1,5 +1,4 @@
-"use client";
-
+import { Suspense } from "react";
 import LoginForm from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
@@ -22,7 +21,9 @@ export default function LoginPage() {
 
       {/* Glassy Form Container */}
       <div className="relative z-10 w-full max-w-[520px] animate-fade-in-up">
-        <LoginForm />
+        <Suspense fallback={<div className="h-[400px] flex items-center justify-center bg-white/10 backdrop-blur-xl rounded-[48px] border border-white/20 shadow-2xl text-white font-bold animate-pulse">Initializing Auth...</div>}>
+          <LoginForm />
+        </Suspense>
       </div>
 
     </main>

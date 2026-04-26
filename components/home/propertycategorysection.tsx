@@ -5,14 +5,14 @@ import PropertyCard from "../property/propertycard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CATEGORY_PROPERTIES = [
-  { image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "6 months ago", category: "House" },
-  { image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 years ago", category: "Villa" },
-  { image: "https://images.unsplash.com/photo-1600607687940-c52af0b4396b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "Apartment" },
-  { image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "House" },
-  { image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "6 months ago", category: "House" },
-  { image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 years ago", category: "Villa" },
-  { image: "https://images.unsplash.com/photo-1600607687940-c52af0b4396b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "Apartment" },
-  { image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "House" },
+  { slug: "luxurious-dubai-1", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "6 months ago", category: "House" },
+  { slug: "luxurious-dubai-2", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 years ago", category: "Villa" },
+  { slug: "luxurious-dubai-3", image: "https://images.unsplash.com/photo-1600607687940-c52af0b4396b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "Apartment" },
+  { slug: "luxurious-dubai-4", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "House" },
+  { slug: "luxurious-dubai-5", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "6 months ago", category: "House" },
+  { slug: "luxurious-dubai-6", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 years ago", category: "Villa" },
+  { slug: "luxurious-dubai-7", image: "https://images.unsplash.com/photo-1600607687940-c52af0b4396b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "Apartment" },
+  { slug: "luxurious-dubai-8", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=2070", title: "Spacious & Luxurious in Dubai", location: "Downtown, Dubai, UAE", price: 7500, beds: 4, baths: 2, sqft: 1150, postedAt: "1 months ago", category: "House" },
 ];
 
 export default function PropertyCategorySection() {
@@ -23,6 +23,7 @@ export default function PropertyCategorySection() {
     "Villa",
     "Apartment",
   ];
+  
 
   return (
     <section ref={sectionRef} className="py-12 sm:py-20 md:py-28 px-4 sm:px-8 lg:px-20 bg-white overflow-hidden">

@@ -5,6 +5,7 @@ const apiClient = axios.create({
   baseURL: "https://module-project-tx70.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "69420",
   },
 });
 
@@ -57,7 +58,6 @@ apiClient.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-
     return Promise.reject(error);
   }
 );

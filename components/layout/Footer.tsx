@@ -47,17 +47,6 @@ export default function Footer() {
         </div>
 
         <div className="lg:col-span-4">
-          <h4 className="font-black text-[#1a2b49] mb-6 sm:mb-8 uppercase tracking-widest text-xs">Subscribe to follow</h4>
-          <div className="flex flex-col sm:flex-row bg-gray-50 rounded-2xl sm:rounded-full p-1 mb-6 sm:mb-8">
-            <input 
-              type="email" 
-              placeholder="Your email....." 
-              className="bg-transparent border-none focus:ring-0 px-6 py-4 sm:py-3 text-sm flex-1 outline-none text-gray-400 font-bold" 
-            />
-            <button className="bg-[#0a1629] text-white px-8 py-4 sm:py-3 rounded-xl sm:rounded-full text-sm font-black shadow-lg hover:bg-orange-600 transition-colors">
-              Subscribe
-            </button>
-          </div>
           <div className="flex gap-6 text-[#1a2b49]">
             <InstagramIcon className="hover:text-orange-500 cursor-pointer transition-colors" />
             <WhatsappIcon className="hover:text-orange-500 cursor-pointer transition-colors" />

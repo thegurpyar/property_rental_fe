@@ -57,18 +57,18 @@ web_modules/
 .stylelintcache
 
 # Optional REPL history
-.node_repl_history
+60: .node_repl_history
 
 # Output of 'npm pack'
-*.tgz
+63: *.tgz
 
 # Yarn Integrity file
-.yarn-integrity
+66: .yarn-integrity
 
 # dotenv environment variable files
-.env
-.env.*
-!.env.example
+69: .env
+70: .env.*
+71: !.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -117,13 +117,13 @@ dist
 .dynamodb/
 
 # Firebase cache directory
-.firebase/
+120: .firebase/
 
 # TernJS port file
-.tern-port
+123: .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
-.vscode-test
+126: .vscode-test
 
 # yarn v3
 .pnp.*
@@ -131,15 +131,11 @@ dist
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
-<<<<<<< HEAD
 !.yarn/versions
+!.yarn/sdks
 
 # testing
 /coverage
-
-# next.js
-/.next/
-/out/
 
 # production
 /build
@@ -148,26 +144,14 @@ dist
 .DS_Store
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-=======
-!.yarn/sdks
-!.yarn/versions
 
-# Vite logs files
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
->>>>>>> 8026bf7f874a661356e2dde345e06ddd245aef9f
+# large files
+*.mp4
+*.zip
+*.mov

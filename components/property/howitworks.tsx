@@ -22,7 +22,7 @@ const STEPS = [
   {
     icon: <CheckCircle className="text-white w-6 h-6" />,
     title: "Close the Deal",
-    desc: "Receive offers, chat with verified buyers, and finalize your sale securely.",
+    desc: "Our experts assist you at every step—from buyer connection to final agreement—ensuring a smooth closing.", 
     color: "bg-green-500",
   },
 ];
