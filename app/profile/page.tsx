@@ -193,16 +193,29 @@ export default function ProfilePage() {
                           fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${fileName}`;
                         }
 
+                        const isVideo = fullImgUrl.toLowerCase().match(/\.(mp4|webm|ogg|mov|m4v)$/) || fullImgUrl.includes("video/");
+
                         return (
-                          <div key={imgObj._id || idx} className="min-w-full h-full snap-center relative">
-                            <img 
-                              src={fullImgUrl} 
-                              alt={`property-${idx}`} 
-                              className="w-full h-full object-cover" 
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80";
-                              }}
-                            />
+                          <div key={imgObj._id || idx} className="min-w-full h-full snap-center relative bg-black">
+                            {isVideo ? (
+                              <video 
+                                src={fullImgUrl} 
+                                className="w-full h-full object-cover" 
+                                muted 
+                                autoPlay 
+                                loop 
+                                playsInline
+                              />
+                            ) : (
+                              <img 
+                                src={fullImgUrl} 
+                                alt={`property-${idx}`} 
+                                className="w-full h-full object-cover" 
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80";
+                                }}
+                              />
+                            )}
                             {/* Image Counter Overlay */}
                             <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-md text-[10px] text-white font-black px-2 py-1 rounded-lg">
                               {idx + 1} / {prop.images.length}

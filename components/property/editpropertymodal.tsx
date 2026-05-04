@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { BasicDetails } from "../../components/property/form-sections/BasicDetails";
 import { LocationDetails } from "../../components/property/form-sections/LocationDetails";
 import { AmenitiesDetails } from "../../components/property/form-sections/AmenitiesDetails";
+import { MediaDetails } from "../../components/property/form-sections/MediaDetails";
 
 interface EditPropertyModalProps {
   property: any;
@@ -41,6 +42,38 @@ export default function EditPropertyModal({ property, isOpen, onClose, onUpdate 
     description: property.description || "",
   });
 
+  const [images, setImages] = useState<string[]>(property.images?.map((img: any) => img.url) || []);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isOpen && property) {
+      setFormData({
+        title: property.title || "",
+        purpose: property.purpose || "rent",
+        category: property.category || "apartment",
+        price: property.price?.toString() || "",
+        priceType: property.priceType || "monthly",
+        bhk: property.bhk?.toString() || "",
+        bathrooms: property.bathrooms?.toString() || "",
+        totalArea: property.totalArea?.toString() || "",
+        areaUnit: property.areaUnit || "sqft",
+        city: property.city || "",
+        sector: property.sector || "",
+        locality: property.locality || "",
+        landmark: property.landmark || "",
+        fullAddress: property.fullAddress || "",
+        furnishing: property.furnishing || "unfurnished",
+        parking: property.parking || "car",
+        age: property.age?.toString() || "",
+        amenities: property.amenities || [],
+        description: property.description || "",
+      });
+      setImages(property.images?.map((img: any) => img.url) || []);
+      setImageFiles([]);
+    }
+  }, [isOpen, property]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -59,10 +92,80 @@ export default function EditPropertyModal({ property, isOpen, onClose, onUpdate 
     }));
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement> | File[]) => {
+    let files: File[] = [];
+    if (Array.isArray(e)) {
+      files = e;
+    } else {
+      files = Array.from(e.target.files || []);
+    }
+
+    const remainingSlots = 10 - images.length;
+    const selectedFiles = files.slice(0, remainingSlots);
+
+    if (selectedFiles.length === 0) return;
+
+    try {
+      const filePromises = selectedFiles.map(file => {
+        return new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const newMediaResults = await Promise.all(filePromises);
+
+      setImages(prev => [...prev, ...newMediaResults].slice(0, 10));
+      setImageFiles(prev => [...prev, ...selectedFiles].slice(0, 10));
+    } catch (err) {
+      console.error("Media processing error:", err);
+      toast.error("Failed to process one or more files.");
+    }
+  };
+
+  const removeImage = (index: number) => {
+    const itemToRemove = images[index];
+    setImages(prev => prev.filter((_, i) => i !== index));
+    
+    if (itemToRemove.startsWith('data:')) {
+      const base64Index = images.slice(0, index).filter(img => img.startsWith('data:')).length;
+      setImageFiles(prev => prev.filter((_, i) => i !== base64Index));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      /**
+       * 🚀 STEP 1: UPLOAD NEW MEDIA
+       */
+      const uploadedImagePaths: { url: string }[] = [];
+      for (const file of imageFiles) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", file);
+
+        const uploadRes = await apiClient.post("/fileupload", formDataUpload, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+
+        if (uploadRes.data.success) {
+          const fileKey = uploadRes.data.data.key;
+          uploadedImagePaths.push({ url: `/uploads/${fileKey}` });
+        }
+      }
+
+      /**
+       * 🎯 STEP 2: COMBINE WITH EXISTING MEDIA
+       */
+      const existingImages = images
+        .filter(img => !img.startsWith('data:'))
+        .map(url => ({ url }));
+
+      const finalImages = [...existingImages, ...uploadedImagePaths];
+
       const payload = {
         ...formData,
         price: Number(formData.price) || 0,
@@ -71,7 +174,7 @@ export default function EditPropertyModal({ property, isOpen, onClose, onUpdate 
         totalArea: Number(formData.totalArea) || 0,
         age: Number(formData.age) || 0,
         coordinates: property.coordinates,
-        images: property.images
+        images: finalImages
       };
 
       const res = await apiClient.put(`/property/user/${property._id}`, payload);
@@ -135,6 +238,18 @@ export default function EditPropertyModal({ property, isOpen, onClose, onUpdate 
               handleInputChange={handleInputChange} 
               handleSelectChange={handleSelectChange} 
               handleAmenityToggle={handleAmenityToggle}
+            />
+
+            <MediaDetails 
+              formData={formData} 
+              handleInputChange={handleInputChange} 
+              handleSelectChange={handleSelectChange} 
+              images={images}
+              imageFiles={imageFiles}
+              fileInputRef={fileInputRef}
+              handleImageUpload={handleImageUpload}
+              removeImage={removeImage}
+              isLoading={isLoading}
             />
 
             <Button 

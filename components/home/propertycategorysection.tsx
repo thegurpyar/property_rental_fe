@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import PropertyCard from "../property/propertycard";
+import { EnquiryModal } from "../property/EnquiryModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import apiClient from "@/lib/apClient";
 import { Loader2, Home } from "lucide-react";
@@ -13,6 +14,8 @@ export default function PropertyCategorySection() {
   const [properties, setProperties] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("House");
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
   const categories: Array<"House" | "Villa" | "Apartment"> = [
     "House",
@@ -42,6 +45,7 @@ export default function PropertyCategorySection() {
             sqft: prop.totalArea || 0,
             postedAt: new Date(prop.createdAt).toLocaleDateString(),
             slug: prop.slug,
+            status: prop.status || "available",
             category: cat
           };
         });
@@ -58,6 +62,12 @@ export default function PropertyCategorySection() {
     fetchProperties(activeTab);
   }, [activeTab]);
   
+  const handleEnquiryClick = (e: React.MouseEvent, prop: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProperty(prop);
+    setIsEnquiryOpen(true);
+  };
 
   return (
     <section ref={sectionRef} className="py-12 sm:py-20 md:py-28 px-4 sm:px-8 lg:px-20 bg-white overflow-hidden">
@@ -122,7 +132,7 @@ export default function PropertyCategorySection() {
                         animationDelay: `${(idx + 1) * 100}ms` 
                       }}
                     >
-                      <PropertyCard property={property} />
+                      <PropertyCard property={property} onEnquiry={handleEnquiryClick} />
                     </div>
                   ))}
                 </div>
@@ -132,6 +142,11 @@ export default function PropertyCategorySection() {
         </div>
 
       </Tabs>
+      <EnquiryModal 
+        isOpen={isEnquiryOpen} 
+        onClose={() => setIsEnquiryOpen(false)} 
+        property={selectedProperty} 
+      />
     </section>
   );
 }

@@ -23,7 +23,7 @@ export default function AddPropertyForm() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [images, setImages] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,18 +87,19 @@ export default function AddPropertyForm() {
         try {
           const parsedImages = JSON.parse(savedImages);
           setImages(parsedImages);
-          
+
           // Convert base64 strings back to File objects for submission
           const restoredFiles = parsedImages.map((base64: string, index: number) => {
             const [header, data] = base64.split(",");
             const mime = header.match(/:(.*?);/)?.[1] || "image/png";
+            const extension = mime.split("/")[1] || "png";
             const binary = atob(data);
             const array = [];
             for (let i = 0; i < binary.length; i++) {
               array.push(binary.charCodeAt(i));
             }
             const blob = new Blob([new Uint8Array(array)], { type: mime });
-            return new File([blob], `restored-image-${index}.png`, { type: mime });
+            return new File([blob], `restored-media-${index}.${extension}`, { type: mime });
           });
           setImageFiles(restoredFiles);
         } catch (err) {
@@ -113,8 +114,14 @@ export default function AddPropertyForm() {
     }
   }, []);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement> | File[]) => {
+    let files: File[] = [];
+    if (Array.isArray(e)) {
+      files = e;
+    } else {
+      files = Array.from(e.target.files || []);
+    }
+
     const remainingSlots = 10 - images.length;
     const selectedFiles = files.slice(0, remainingSlots);
 
@@ -123,20 +130,21 @@ export default function AddPropertyForm() {
     // Process all files and wait for them to finish
     try {
       const filePromises = selectedFiles.map(file => {
-        return new Promise<string>((resolve) => {
+        return new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
           reader.readAsDataURL(file);
         });
       });
 
-      const newImageResults = await Promise.all(filePromises);
-      
-      setImages(prev => [...prev, ...newImageResults].slice(0, 10));
+      const newMediaResults = await Promise.all(filePromises);
+
+      setImages(prev => [...prev, ...newMediaResults].slice(0, 10));
       setImageFiles(prev => [...prev, ...selectedFiles].slice(0, 10));
     } catch (err) {
-      console.error("Image processing error:", err);
-      toast.error("Failed to process one or more images.");
+      console.error("Media processing error:", err);
+      toast.error("Failed to process one or more files.");
     }
   };
 
@@ -170,7 +178,14 @@ export default function AddPropertyForm() {
       return;
     }
 
-    if (imageFiles.length < 3) return toast.error("Please upload at least 3 images.");
+    // 🔐 VALIDATION
+    if (!formData.title || !formData.price || !formData.totalArea || !formData.city) {
+      return toast.error("Please fill all required fields", {
+        description: "Title, Price, Total Area, and City are mandatory."
+      });
+    }
+
+    // Image validation removed to make it optional
 
     setIsLoading(true);
     try {
@@ -178,12 +193,12 @@ export default function AddPropertyForm() {
        * 🚀 STEP 1: UPLOAD ACTUAL IMAGES
        */
       const uploadedImagePaths: { url: string }[] = [];
-      
+
       // We use a for-of loop to upload sequentially and ensure all finish
       for (const file of imageFiles) {
         const formDataUpload = new FormData();
         formDataUpload.append("file", file);
-        
+
         console.log(`Uploading: ${file.name}...`);
         const uploadRes = await apiClient.post("/fileupload", formDataUpload, {
           headers: { "Content-Type": "multipart/form-data" }
@@ -196,9 +211,7 @@ export default function AddPropertyForm() {
         }
       }
 
-      if (uploadedImagePaths.length < 3) {
-        throw new Error("Failed to upload minimum required images.");
-      }
+      // Removed minimum 3 images requirement
 
       /**
        * 🎯 STEP 2: SUBMIT PROPERTY JSON
@@ -218,7 +231,7 @@ export default function AddPropertyForm() {
         images: uploadedImagePaths // Using the real server-generated paths
       };
 
-      console.log("Publishing Final Property Data:", payload);
+      console.log("🚀 Publishing Property Payload:", payload);
       const response = await apiClient.post("/property/user", payload);
 
       if (response.data.success) {
@@ -259,8 +272,13 @@ export default function AddPropertyForm() {
         router.push("/property");
       }
     } catch (error: any) {
-      console.error("Submission Error:", error.response?.data || error.message);
-      toast.error(error.response?.data?.message || error.message || "Failed to publish property.");
+      console.error("❌ Submission Error:", error);
+      console.error("Error Response:", error.response?.data);
+
+      const errorMessage = error.response?.data?.message || error.message || "Failed to publish property.";
+      toast.error("Submission Failed", {
+        description: errorMessage
+      });
     } finally {
       setIsLoading(false);
     }
@@ -292,29 +310,29 @@ export default function AddPropertyForm() {
 
       <CardContent className="p-8 md:p-12 space-y-20 bg-white relative z-10 rounded-b-[48px]">
         <form onSubmit={handleSubmit} className="space-y-16">
-          
-          <BasicDetails 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
-            handleSelectChange={handleSelectChange} 
+
+          <BasicDetails
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleSelectChange={handleSelectChange}
           />
 
-          <LocationDetails 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
-            handleSelectChange={handleSelectChange} 
+          <LocationDetails
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleSelectChange={handleSelectChange}
           />
 
-          <AmenitiesDetails 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
-            handleSelectChange={handleSelectChange} 
+          <AmenitiesDetails
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleSelectChange={handleSelectChange}
             handleAmenityToggle={handleAmenityToggle}
           />
 
-          <MediaDetails 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
+          <MediaDetails
+            formData={formData}
+            handleInputChange={handleInputChange}
             handleSelectChange={handleSelectChange}
             images={images}
             imageFiles={imageFiles}
@@ -324,9 +342,9 @@ export default function AddPropertyForm() {
             isLoading={isLoading}
           />
 
-          <Button 
-            type="submit" 
-            disabled={isLoading} 
+          <Button
+            type="submit"
+            disabled={isLoading}
             className="w-full bg-[#FF7F32] hover:bg-orange-600 text-white h-auto py-7 rounded-3xl font-black text-xl shadow-2xl shadow-orange-500/30 transition-all active:scale-[0.98] border-none group"
           >
             {isLoading ? <Loader2 className="animate-spin mr-2" /> : "Publish Property Listing"}

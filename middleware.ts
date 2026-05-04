@@ -7,6 +7,11 @@ export function middleware(request: NextRequest) {
 
   // Only run this logic for routes starting with /admin
   if (pathname.startsWith('/admin')) {
+    // 0. EXCLUDE THE ADMIN LOGIN PAGE ITSELF
+    if (pathname === '/admin/login') {
+      return NextResponse.next();
+    }
+
     // 1. Check if token exists
     if (!token) {
       const loginUrl = new URL('/login', request.url);
@@ -20,9 +25,9 @@ export function middleware(request: NextRequest) {
       // Next.js Middleware supports atob in the Edge Runtime
       const payloadBase64 = token.split('.')[1];
       if (!payloadBase64) throw new Error('Invalid token format');
-      
+
       const decodedPayload = JSON.parse(atob(payloadBase64));
-      
+
       // 3. Verify the role is exactly 'admin'
       if (decodedPayload.role !== 'admin') {
         console.warn(`Unauthorized access attempt to ${pathname} by role: ${decodedPayload.role}`);

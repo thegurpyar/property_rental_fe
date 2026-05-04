@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/lib/apClient";
 import { Card } from "@/components/ui/card";
-import { Loader2, Search, MoreVertical, Phone, Mail, Shield, CheckCircle2, XCircle, User } from "lucide-react";
+import { Loader2, Search, MoreVertical, Phone, Mail, Shield, CheckCircle2, XCircle, User, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -10,6 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function UsersList() {
   const [users, setUsers] = useState<any[]>([]);
@@ -27,6 +38,8 @@ export default function UsersList() {
     total: 0,
     totalPages: 1
   });
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -68,6 +81,42 @@ export default function UsersList() {
 
   const handlePageChange = (newPage: number) => {
     setFilters(prev => ({ ...prev, page: newPage }));
+  };
+
+  const initiateDelete = (userId: string) => {
+    setUserIdToDelete(userId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const executeDelete = async () => {
+    if (!userIdToDelete) return;
+
+    try {
+      const res = await apiClient.delete(`/admin/users/${userIdToDelete}`);
+      if (res.data.success) {
+        toast.success("User deleted successfully");
+        setUsers(prev => prev.filter(user => user._id !== userIdToDelete));
+        setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to delete user");
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setUserIdToDelete(null);
+    }
+  };
+
+  const handleStatusToggle = async (userId: string, currentStatus: number) => {
+    const newStatus = currentStatus === 1 ? 2 : 1;
+    try {
+      const res = await apiClient.patch(`/admin/users/${userId}/status`, { status: newStatus });
+      if (res.data.success) {
+        toast.success(`User marked as ${newStatus === 1 ? 'Active' : 'Inactive'}`);
+        setUsers(prev => prev.map(u => u._id === userId ? { ...u, status: newStatus } : u));
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to update status");
+    }
   };
 
   return (
@@ -217,20 +266,34 @@ export default function UsersList() {
                         </div>
                       </td>
                       <td className="px-10 py-8">
-                        {user.status === 1 ? (
-                          <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                            <CheckCircle2 size={12} /> Active
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-500 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                            <XCircle size={12} /> Inactive
-                          </span>
-                        )}
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={() => handleStatusToggle(user._id, user.status)}
+                            className={`relative w-12 h-6 rounded-full transition-all duration-300 p-1 flex items-center ${user.status === 1 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : "bg-slate-200"
+                              }`}
+                          >
+                            <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300 transform ${user.status === 1 ? "translate-x-6" : "translate-x-0"
+                              }`} />
+                          </button>
+                          {user.status === 1 ? (
+                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Active</span>
+                          ) : (
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Inactive</span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-10 py-8 text-right">
-                        <button className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 rounded-xl transition-all ml-auto">
-                          <MoreVertical size={20} className="text-slate-300" />
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button 
+                            onClick={() => initiateDelete(user._id)}
+                            className="w-10 h-10 flex items-center justify-center hover:bg-rose-50 text-slate-300 hover:text-rose-500 rounded-xl transition-all"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                          <button className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 rounded-xl transition-all">
+                            <MoreVertical size={20} className="text-slate-300" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -264,9 +327,17 @@ export default function UsersList() {
                   <div className="font-black text-[#1a2b49] text-base truncate">{user.full_name}</div>
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#FF7F32] mt-0.5">{user.role}</div>
                 </div>
-                <button className="w-8 h-8 flex items-center justify-center hover:bg-slate-50 rounded-lg transition-all">
-                  <MoreVertical size={18} className="text-slate-300" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => initiateDelete(user._id)}
+                    className="w-8 h-8 flex items-center justify-center hover:bg-rose-50 text-slate-300 hover:text-rose-500 rounded-lg transition-all"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                  <button className="w-8 h-8 flex items-center justify-center hover:bg-slate-50 rounded-lg transition-all">
+                    <MoreVertical size={18} className="text-slate-300" />
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-2 pt-2">
@@ -285,15 +356,21 @@ export default function UsersList() {
               </div>
 
               <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
-                {user.status === 1 ? (
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-[9px] font-black uppercase tracking-widest">
-                    <CheckCircle2 size={10} /> Active
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-500 rounded-lg text-[9px] font-black uppercase tracking-widest">
-                    <XCircle size={10} /> Inactive
-                  </span>
-                )}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handleStatusToggle(user._id, user.status)}
+                    className={`relative w-10 h-5 rounded-full transition-all duration-300 p-1 flex items-center ${user.status === 1 ? "bg-emerald-500" : "bg-slate-200"
+                      }`}
+                  >
+                    <div className={`w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300 transform ${user.status === 1 ? "translate-x-5" : "translate-x-0"
+                      }`} />
+                  </button>
+                  {user.status === 1 ? (
+                    <span className="text-[9px] font-black uppercase tracking-widest text-green-600">Active</span>
+                  ) : (
+                    <span className="text-[9px] font-black uppercase tracking-widest text-rose-500">Inactive</span>
+                  )}
+                </div>
                 <span className="text-[9px] font-bold text-slate-300 uppercase tracking-tighter">ID: {user._id?.slice(-6)}</span>
               </div>
             </div>
@@ -323,6 +400,36 @@ export default function UsersList() {
           </button>
         </div>
       </div>
+
+      {/* 🛡️ Professional Delete Confirmation Modal */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent className="rounded-[40px] border-none shadow-2xl bg-white overflow-hidden p-0">
+          <div className="p-10 pb-0">
+            <AlertDialogHeader className="space-y-4">
+              <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 m-0">
+                <Trash2 size={32} />
+              </div>
+              <AlertDialogTitle className="text-3xl font-black text-[#1a2b49] tracking-tighter leading-tight">
+                Confirm User Deletion?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-slate-500 font-bold text-base italic leading-relaxed">
+                "This action is permanent. All properties and history associated with this user will be removed from the Mr. Tolet network."
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+          </div>
+          <AlertDialogFooter className="mt-8 bg-slate-50/50 p-8 flex flex-col sm:flex-row gap-3 border-t border-slate-100">
+            <AlertDialogCancel className="flex-1 border-none bg-white hover:bg-slate-100 text-[#1a2b49] h-14 rounded-2xl font-black uppercase tracking-widest text-[10px]">
+              Keep User
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={executeDelete}
+              className="flex-1 bg-rose-500 hover:bg-rose-600 text-white h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-rose-200"
+            >
+              Delete Permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

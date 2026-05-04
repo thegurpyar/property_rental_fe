@@ -55,17 +55,15 @@ export default function Sidebar() {
               key={item.name}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-4 px-5 py-4 rounded-[20px] font-bold text-sm transition-all duration-300 group ${
-                isActive
+              className={`flex items-center gap-4 px-5 py-4 rounded-[20px] font-bold text-sm transition-all duration-300 group ${isActive
                 ? "bg-[#FF7F32] text-white shadow-lg shadow-orange-500/30"
                 : "text-slate-500 hover:bg-orange-50 hover:text-[#FF7F32]"
-              }`}
+                }`}
             >
               <item.icon
                 size={20}
-                className={`transition-all duration-300 ${
-                  isActive ? "scale-110" : "group-hover:scale-110 group-hover:rotate-3"
-                }`}
+                className={`transition-all duration-300 ${isActive ? "scale-110" : "group-hover:scale-110 group-hover:rotate-3"
+                  }`}
               />
               {item.name}
             </Link>
@@ -116,9 +114,8 @@ export default function Sidebar() {
 
       {/* ── Mobile: Slide-in drawer ── */}
       <div
-        className={`md:hidden fixed top-0 left-0 h-screen z-50 transition-transform duration-300 ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`md:hidden fixed top-0 left-0 h-screen z-50 transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <SidebarContent />
       </div>

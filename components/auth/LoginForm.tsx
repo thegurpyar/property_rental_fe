@@ -136,7 +136,7 @@ export default function LoginForm() {
               <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Full Name</Label>
               <div className="relative">
                 <User className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#FF7F32]" size={18} />
-                <Input type="text" placeholder="Gurpyar" className={inputBase} value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} />
+                <Input type="text" className={inputBase} value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} />
               </div>
             </div>
             <div className="space-y-2 group">
@@ -145,11 +145,11 @@ export default function LoginForm() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-gray-400 font-bold border-r border-gray-200 pr-3 h-6">
                   <span className="text-xs">+91</span>
                 </div>
-                <Input type="tel" placeholder="9876543210" className={inputBase} value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} disabled={isLoading} />
+                <Input type="tel" className={inputBase} value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} disabled={isLoading} />
               </div>
             </div>
             <Button onClick={handleRegister} disabled={isLoading} className="w-full bg-[#FF7F32] hover:bg-orange-600 text-white py-6 rounded-full font-black text-lg shadow-xl shadow-orange-600/20">
-              {isLoading ? <Loader2 className="animate-spin" /> : "Get Started"}
+              {isLoading ? <Loader2 className="animate-spin" /> : "Login"}
             </Button>
           </div>
         )}

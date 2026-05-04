@@ -2,214 +2,242 @@
 
 import { useState, useEffect } from "react";
 import {
+  Search,
+  Filter,
+  MoreVertical,
   CheckCircle2,
   XCircle,
-  Eye,
   Clock,
-  User,
-  Loader2
+  ExternalLink,
+  Loader2,
+  Building2,
+  ShieldCheck,
+  ShieldAlert
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-// ── 🧪 MOCK DATA (Pending Queue) ──
-const pendingQueue = [
-  {
-    id: "APP-4492",
-    title: "Penthouse at The Reserve",
-    location: "Sector 17, Chandigarh",
-    price: "₹6.8 Cr",
-    owner: "Ujjwal Nagpal",
-    submitted: "2 hours ago",
-    risk: "Low",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80"
-  },
-  {
-    id: "APP-1102",
-    title: "Eco-Friendly 3BHK",
-    location: "Zirakpur, Punjab",
-    price: "₹85 Lakhs",
-    owner: "Shreeya Narayan",
-    submitted: "5 hours ago",
-    risk: "Medium",
-    image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=100&q=80"
-  },
-  {
-    id: "APP-8831",
-    title: "Industrial Warehouse",
-    location: "Dera Bassi",
-    price: "₹15 Cr",
-    owner: "Rahul Verma",
-    submitted: "1 day ago",
-    risk: "High",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=100&q=80"
-  }
-];
-
-const getRiskBadge = (risk: string) => (
-  <Badge className={`
-    ${risk === "Low"    ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
-      risk === "Medium" ? "bg-orange-50 text-[#FF7F32] border-orange-100" :
-                         "bg-rose-50 text-rose-600 border-rose-100"}
-    font-black uppercase text-[9px] px-3 py-1 rounded-full border
-  `}>
-    {risk} Risk
-  </Badge>
-);
-
-const ActionButtons = () => (
-  <div className="flex items-center gap-2">
-    <button className="p-2 sm:p-2.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white rounded-xl transition-all shadow-sm" title="Approve">
-      <CheckCircle2 size={16} strokeWidth={2.5} />
-    </button>
-    <button className="p-2 sm:p-2.5 bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white rounded-xl transition-all shadow-sm" title="Reject">
-      <XCircle size={16} strokeWidth={2.5} />
-    </button>
-    <button className="p-2 sm:p-2.5 bg-white border border-orange-100 text-slate-400 hover:bg-orange-50 hover:text-[#FF7F32] rounded-xl transition-all shadow-sm">
-      <Eye size={16} />
-    </button>
-  </div>
-);
+import { toast } from "sonner";
+import apiClient from "@/lib/apClient";
 
 export default function AdminApprovals() {
-  const [items, setItems] = useState(pendingQueue);
+  const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    page: 1,
+    limit: 10,
+    search: "",
+    status: "pending"
+  });
+  const [pagination, setPagination] = useState({
+    total: 0,
+    totalPages: 1
+  });
+
+  const fetchProperties = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append("page", filters.page.toString());
+      params.append("limit", filters.limit.toString());
+      if (filters.search) params.append("search", filters.search);
+      if (filters.status !== "all") params.append("status", filters.status);
+
+      const res = await apiClient.get(`/property/admin/properties?${params.toString()}`);
+      if (res.data.success) {
+        setProperties(res.data.data.properties);
+        setPagination({
+          total: res.data.data.pagination.total,
+          totalPages: res.data.data.pagination.totalPages
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch approvals:", error);
+      toast.error("Failed to sync approvals list");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 700);
+    const timer = setTimeout(fetchProperties, 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [filters]);
+
+  const handleStatusToggle = async (propertyId: string, currentStatus: string) => {
+    const newStatus = currentStatus === "available" ? "rejected" : "available";
+    try {
+      const res = await apiClient.patch(`/property/admin/property/status/${propertyId}`, { status: newStatus });
+      if (res.data.success) {
+        setProperties(prev => prev.map(p => p._id === propertyId ? { ...p, status: newStatus } : p));
+        toast.success(`Property marked as ${newStatus === 'available' ? 'Approved' : 'Not Approved'}`);
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to update status");
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const isApproved = status === "available";
+    return (
+      <Badge className={`font-black uppercase text-[9px] px-3 py-1 rounded-full flex items-center gap-1.5 ${
+        isApproved 
+          ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+          : "bg-slate-50 text-slate-400 border-slate-100"
+      }`}>
+        <div className={`w-1.5 h-1.5 rounded-full ${isApproved ? "bg-emerald-500 animate-pulse" : "bg-slate-300"}`} />
+        {isApproved ? "Approved" : "Not Approved"}
+      </Badge>
+    );
+  };
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <div className="space-y-6 md:space-y-10 animate-in fade-in duration-700">
 
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#1a2b49] tracking-tighter uppercase">
-            Listing <span className="text-[#FF7F32]">Approvals</span>
+          <h1 className="text-3xl md:text-5xl font-black text-[#1a2b49] tracking-tighter uppercase">
+            Property <span className="text-[#FF7F32]">Approvals</span>
           </h1>
-          <p className="text-gray-400 font-bold uppercase tracking-[0.3em] text-[9px] mt-1">
-            Quality Assurance &amp; Verification Gateway
+          <p className="text-gray-400 font-bold uppercase tracking-[0.3em] text-[9px] mt-2">
+            Quality Assurance & Listing Verification Portal
           </p>
         </div>
-        <div className="flex items-center gap-3 bg-white border border-orange-100 rounded-2xl px-4 sm:px-5 py-3 shadow-sm w-fit">
-          <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-          <span className="text-[10px] font-black uppercase text-[#1a2b49] tracking-widest">
-            {items.length} Pending Review
-          </span>
+      </div>
+
+      {/* ── Filters ── */}
+      <div className="bg-white rounded-[40px] p-4 shadow-xl shadow-slate-200/40 border border-slate-100">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#FF7F32] transition-colors" size={20} />
+            <input
+              placeholder="Search properties to approve..."
+              className="w-full bg-slate-50 border-none rounded-[24px] py-4 pl-16 pr-6 text-sm font-bold text-[#1a2b49] outline-none focus:ring-4 focus:ring-orange-500/5 transition-all"
+              value={filters.search}
+              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }))}
+            />
+          </div>
+          <div className="flex gap-2">
+            {["pending", "available", "rejected", "all"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilters(prev => ({ ...prev, status: s, page: 1 }))}
+                className={`px-6 h-14 rounded-[24px] text-[10px] font-black uppercase tracking-widest transition-all ${filters.status === s ? "bg-[#1a2b49] text-white shadow-lg" : "bg-white text-slate-400 hover:bg-orange-50"}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ── Mobile: Card list (< sm) ── */}
-      <div className="sm:hidden space-y-3">
-        {loading ? (
-          <div className="py-20 flex flex-col items-center gap-4">
-            <Loader2 className="animate-spin text-[#FF7F32]" size={32} />
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Scanning Submissions...</p>
-          </div>
-        ) : (
-          items.map((item) => (
-            <Card key={item.id} className="rounded-[24px] border-orange-100 bg-white shadow-sm p-4">
-              {/* Top row: image + title + risk */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-2xl overflow-hidden border border-orange-100 flex-shrink-0">
-                  <img src={item.image} alt="prop" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-black text-[#1a2b49] text-sm truncate">{item.title}</div>
-                  <div className="flex items-center gap-1.5 text-[9px] text-slate-400 font-bold uppercase mt-0.5">
-                    <Clock size={9} /> {item.submitted}
-                  </div>
-                </div>
-                {getRiskBadge(item.risk)}
-              </div>
-
-              {/* Bottom row: owner + status + actions */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-orange-100 text-[#FF7F32] rounded-lg flex items-center justify-center">
-                    <User size={12} />
-                  </div>
-                  <div>
-                    <div className="text-xs font-black text-[#1a2b49]">{item.owner}</div>
-                    <div className="text-[9px] text-slate-400 font-bold">UID: {item.id}</div>
-                  </div>
-                </div>
-                <ActionButtons />
-              </div>
-            </Card>
-          ))
-        )}
-      </div>
-
-      {/* ── Tablet/Desktop: Table (sm+) ── */}
-      <Card className="hidden sm:block rounded-[40px] border-orange-100 bg-white/70 backdrop-blur-xl shadow-2xl shadow-orange-950/5 overflow-hidden">
+      {/* ── Table ── */}
+      <Card className="rounded-[48px] border-none bg-white shadow-2xl shadow-slate-200/50 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-orange-50/50 border-b border-orange-100">
+          <table className="w-full text-left min-w-[1000px]">
+            <thead className="bg-slate-50/50">
               <tr>
-                <th className="px-6 md:px-8 py-5 md:py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Submission</th>
-                <th className="px-6 md:px-8 py-5 md:py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Listed By</th>
-                <th className="px-6 md:px-8 py-5 md:py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Risk Score</th>
-                <th className="px-6 md:px-8 py-5 md:py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
-                <th className="px-6 md:px-8 py-5 md:py-6"></th>
+                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Asset Details</th>
+                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Current Status</th>
+                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Approve / Reject</th>
+                <th className="px-10 py-7"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-orange-50">
+            <tbody className="divide-y divide-slate-50">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="py-24 text-center">
-                    <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={32} />
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mt-4">Scanning Submissions...</p>
+                  <td colSpan={4} className="py-40 text-center">
+                    <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={48} />
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mt-8">Fetching Approvals...</p>
+                  </td>
+                </tr>
+              ) : properties.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-40 text-center">
+                    <ShieldCheck className="mx-auto text-slate-100 mb-8" size={72} />
+                    <h3 className="text-2xl font-black text-[#1a2b49] tracking-tight">Clear - No Pending Approvals</h3>
                   </td>
                 </tr>
               ) : (
-                items.map((item) => (
-                  <tr key={item.id} className="group hover:bg-orange-50/30 transition-all duration-300">
-                    <td className="px-6 md:px-8 py-5 md:py-6">
-                      <div className="flex items-center gap-3 md:gap-4">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl overflow-hidden border border-orange-100 shadow-sm flex-shrink-0">
-                          <img src={item.image} alt="prop" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                        </div>
-                        <div>
-                          <div className="font-black text-[#1a2b49] group-hover:text-[#FF7F32] transition-colors">{item.title}</div>
-                          <div className="flex items-center gap-1.5 text-[9px] text-slate-400 font-bold uppercase">
-                            <Clock size={10} /> {item.submitted}
+                properties.map((prop) => {
+                  const firstImg = prop.images?.[0]?.url;
+                  let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
+                  if (firstImg) {
+                    if (firstImg.startsWith("http")) fullImgUrl = firstImg;
+                    else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
+                  }
+
+                  return (
+                    <tr key={prop._id} className="group hover:bg-slate-50/50 transition-all duration-300">
+                      <td className="px-10 py-8">
+                        <div className="flex items-center gap-6">
+                          <div className="w-16 h-16 rounded-[24px] overflow-hidden border border-orange-100 shadow-sm flex-shrink-0 bg-black">
+                            <img src={fullImgUrl} alt="thumb" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                          </div>
+                          <div>
+                            <div className="font-black text-[#1a2b49] text-base group-hover:text-[#FF7F32] transition-colors">{prop.title}</div>
+                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">{prop.locality}, {prop.city}</div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 md:px-8 py-5 md:py-6">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 bg-orange-100 text-[#FF7F32] rounded-lg flex items-center justify-center">
-                          <User size={14} />
+                      </td>
+                      <td className="px-10 py-8 text-center">
+                        <div className="flex justify-center">
+                          {getStatusBadge(prop.status)}
                         </div>
-                        <div>
-                          <div className="text-xs font-black text-[#1a2b49]">{item.owner}</div>
-                          <div className="text-[9px] text-slate-400 font-bold">UID: {item.id}</div>
+                      </td>
+                      <td className="px-10 py-8">
+                        <div className="flex flex-col items-center">
+                          <button
+                            onClick={() => handleStatusToggle(prop._id, prop.status)}
+                            className={`relative w-14 h-7 rounded-full transition-all duration-300 p-1 flex items-center ${
+                              prop.status === "available" ? "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]" : "bg-slate-200"
+                            }`}
+                          >
+                            <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 transform ${
+                              prop.status === "available" ? "translate-x-7" : "translate-x-0"
+                            }`} />
+                          </button>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 md:px-8 py-5 md:py-6">
-                      {getRiskBadge(item.risk)}
-                    </td>
-                    <td className="px-6 md:px-8 py-5 md:py-6">
-                      <Badge className="bg-slate-100 text-slate-500 border-slate-200 font-black uppercase text-[9px] px-3 py-1 rounded-full">
-                        Pending
-                      </Badge>
-                    </td>
-                    <td className="px-6 md:px-8 py-5 md:py-6 text-right">
-                      <ActionButtons />
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-10 py-8 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
+                            <ExternalLink size={20} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </Card>
 
+      {/* ── Pagination ── */}
+      <div className="flex items-center justify-between px-10 pb-20">
+        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-300">{pagination.total} Items Under Review</p>
+        <div className="flex gap-4">
+          <Button 
+            variant="ghost" 
+            disabled={filters.page === 1 || loading}
+            onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
+            className="px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100"
+          >
+            Prev
+          </Button>
+          <Button 
+            variant="ghost" 
+            disabled={filters.page >= pagination.totalPages || loading}
+            onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
+            className="px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white"
+          >
+            Next
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { ShieldCheck, Lock, Loader2 } from "lucide-react";
+import { ShieldCheck, Lock, Loader2, Mail } from "lucide-react";
 import { Card, CardContent } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
@@ -85,13 +85,15 @@ export default function AdminLoginPage() {
           <div className="space-y-5 text-left">
             <div className="space-y-2 group">
               <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Admin Email</Label>
-              <Input
-                type="email"
-                placeholder="admin@propertypro.com"
-                className="bg-orange-50/20 border-orange-100 rounded-2xl py-7 pl-6 focus:ring-4 focus:ring-orange-500/5 focus:border-[#FF7F32] transition-all outline-none"
-                value={credentials.email}
-                onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-              />
+              <div className="relative">
+                <Input
+                  type="email"
+                  className="bg-orange-50/20 border-orange-100 rounded-2xl py-7 pl-14 focus:ring-4 focus:ring-orange-500/5 focus:border-[#FF7F32] transition-all outline-none"
+                  value={credentials.email}
+                  onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                />
+                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-orange-300" size={18} />
+              </div>
             </div>
 
             <div className="space-y-2 group">
@@ -99,12 +101,11 @@ export default function AdminLoginPage() {
               <div className="relative">
                 <Input
                   type="password"
-                  placeholder="••••••••"
-                  className="bg-orange-50/20 border-orange-100 rounded-2xl py-7 pl-6 focus:ring-4 focus:ring-orange-500/5 focus:border-[#FF7F32] transition-all outline-none"
+                  className="bg-orange-50/20 border-orange-100 rounded-2xl py-7 pl-14 focus:ring-4 focus:ring-orange-500/5 focus:border-[#FF7F32] transition-all outline-none"
                   value={credentials.password}
                   onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                 />
-                <Lock className="absolute right-6 top-1/2 -translate-y-1/2 text-orange-200" size={18} />
+                <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-orange-300" size={18} />
               </div>
             </div>
 

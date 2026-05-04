@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { EnquiryModal } from "@/components/property/EnquiryModal";
 import apiClient from "@/lib/apClient";
 import EditPropertyModal from "@/components/property/editpropertymodal";
 import { Pencil } from "lucide-react";
@@ -42,6 +43,7 @@ export default function PropertyDetailsPage() {
   const [activeImage, setActiveImage] = useState(0);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
 
   const fetchProperty = async () => {
     try {
@@ -106,13 +108,17 @@ export default function PropertyDetailsPage() {
     isMatch: isOwner
   });
 
-  const images = property.images?.map((imgObj: any) => {
+  const media = property.images?.map((imgObj: any) => {
     const rawUrl = imgObj.url || "";
     if (rawUrl.startsWith("http")) return rawUrl;
     const fileName = rawUrl.split('/').pop();
     if (!fileName) return "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80";
     return `https://module-project-tx70.onrender.com/uploads/${fileName}`;
   }) || [];
+
+  const isVideo = (url: string) => {
+    return url.toLowerCase().match(/\.(mp4|webm|ogg|mov|m4v)$/) || url.includes("video/");
+  };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80";
@@ -131,108 +137,213 @@ export default function PropertyDetailsPage() {
         />
       )}
 
-      {/* 📸 ULTRA MODERN IMAGE HERO */}
-      <section className="relative h-[70vh] md:h-[85vh] w-full overflow-hidden">
-        <img 
-          src={images[activeImage] || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80"}
-          className="w-full h-full object-cover animate-slow-zoom"
-          alt={property.title}
-          onError={handleImageError}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent z-10 h-64" />
-        
-        {/* Floating Actions inside Hero */}
-        <div className="absolute inset-x-0 top-24 md:top-28 p-6 md:px-16 flex justify-between items-center z-20">
-          <button 
-            onClick={() => router.back()}
-            className="group flex items-center gap-3 bg-black/40 backdrop-blur-3xl px-6 py-3 rounded-2xl border border-white/20 text-white hover:bg-[#FF7F32] hover:border-[#FF7F32] transition-all duration-300 shadow-2xl"
-          >
-            <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform"/> 
-            <span className="text-[11px] font-black uppercase tracking-widest">Back to Search</span>
+      {/* 📸 REALTOR.CA STYLE LAYOUT */}
+      
+      {/* Top Action Bar */}
+      <div className="sticky top-0 z-50 bg-white border-b border-slate-100 px-6 py-4 flex justify-between items-center">
+        <button 
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-slate-600 hover:text-[#1a2b49] transition-colors"
+        >
+          <ChevronLeft size={20} />
+          <span className="text-sm font-bold">Back</span>
+        </button>
+        <div className="flex gap-4">
+          <button className="text-slate-400 hover:text-rose-500 transition-colors">
+            <Heart size={24} />
           </button>
-          
-          <div className="flex gap-3">
-             {isOwner && (
-               <button 
-                onClick={() => setIsEditModalOpen(true)}
-                className="flex items-center gap-3 bg-[#FF7F32] px-6 py-3 rounded-2xl text-white font-black hover:bg-orange-600 transition-all shadow-2xl transform active:scale-95"
-               >
-                 <Pencil size={18} />
-                 <span className="text-[11px] uppercase tracking-widest">Edit Listing</span>
-               </button>
-             )}
-             <button className="w-12 h-12 bg-black/40 backdrop-blur-3xl rounded-2xl flex items-center justify-center text-white hover:bg-rose-500 hover:border-rose-500 transition-all border border-white/20 shadow-2xl">
-              <Heart size={20} />
+          <button className="text-slate-400 hover:text-[#FF7F32] transition-colors">
+            <Share2 size={24} />
+          </button>
+          {isOwner && (
+            <button 
+              onClick={() => setIsEditModalOpen(true)}
+              className="text-[#FF7F32] hover:text-orange-600 transition-colors"
+            >
+              <Pencil size={24} />
             </button>
-            <button className="w-12 h-12 bg-black/40 backdrop-blur-3xl rounded-2xl flex items-center justify-center text-white hover:bg-[#FF7F32] hover:border-[#FF7F32] transition-all border border-white/20 shadow-2xl">
-              <Share2 size={20} />
-            </button>
-          </div>
+          )}
         </div>
+      </div>
 
-        {/* Title & Price Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-8 md:p-16 text-white z-10 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/20 to-transparent">
-          <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-12">
-            <div className="space-y-6 flex-1">
-              <Badge className="bg-[#FF7F32] hover:bg-orange-600 text-white border-none px-5 py-2 rounded-full text-[10px] uppercase font-black tracking-widest shadow-lg">
-                {property.purpose} - {property.category}
+      {/* Image Gallery Viewer */}
+      <section className="relative w-full aspect-[4/3] md:aspect-video bg-black overflow-hidden">
+        {isVideo(media[activeImage]) ? (
+          <video 
+            src={media[activeImage]} 
+            className="w-full h-full object-contain" 
+            controls 
+            autoPlay 
+            muted 
+            loop
+          />
+        ) : (
+          <img 
+            src={media[activeImage] || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80"}
+            className="w-full h-full object-cover"
+            alt={property.title}
+            onError={handleImageError}
+          />
+        )}
+        
+        {/* Image Navigation Arrows (Hidden if only 1 image) */}
+        {media.length > 1 && (
+          <>
+            <button 
+              onClick={() => setActiveImage(prev => (prev > 0 ? prev - 1 : media.length - 1))}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all z-10"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={() => setActiveImage(prev => (prev < media.length - 1 ? prev + 1 : 0))}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all z-10"
+            >
+              <ChevronLeft size={24} className="rotate-180" />
+            </button>
+          </>
+        )}
+
+        {/* Image Counter */}
+        <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-lg text-white text-xs font-black tracking-widest z-10">
+          {activeImage + 1} / {media.length}
+        </div>
+      </section>
+
+      {/* 🖼️ Thumbnail Strip (Moved to Top) */}
+      {media.length > 1 && (
+        <div className="max-w-7xl mx-auto px-6 md:px-16 flex gap-3 overflow-x-auto pb-4 scrollbar-hide pt-4 bg-white">
+          {media.map((item: string, i: number) => (
+            <button 
+              key={i} 
+              onClick={() => setActiveImage(i)}
+              className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden transition-all border-2 ${activeImage === i ? 'border-[#FF7F32]' : 'border-transparent opacity-60 hover:opacity-100'}`}
+            >
+              {isVideo(item) ? (
+                <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                  <Video size={20} className="text-slate-400" />
+                </div>
+              ) : (
+                <img src={item} className="w-full h-full object-cover" alt="" onError={handleImageError} />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* 📄 PROPERTY CORE DETAILS (REALTOR.CA STYLE) */}
+      <section className="max-w-7xl mx-auto px-6 md:px-16 pt-12 pb-16 bg-white border-b border-slate-50">
+        <div className="flex flex-col lg:flex-row gap-16 items-start">
+          
+          {/* 1. Primary Details */}
+          <div className="flex-1 space-y-10">
+            <div className="space-y-4">
+              <Badge className="bg-slate-100 text-slate-500 border-none px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest">
+                {new Date(property.createdAt || Date.now()).toLocaleDateString()} • {property.status || "Active"}
               </Badge>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-4xl drop-shadow-2xl">
-                {property.title}
-              </h1>
-              <div className="flex items-center gap-3 text-white/80 font-bold">
-                <MapPin size={24} className="text-[#FF7F32]" />
-                <span className="text-xl md:text-2xl">{property.fullAddress || `${property.sector}, ${property.city}`}</span>
+              
+              <div className="space-y-1">
+                <h2 className="text-5xl md:text-6xl font-black text-[#1a2b49] tracking-tight">
+                  ₹{property.price.toLocaleString()}
+                </h2>
+                <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                  Total Investment Commitment
+                </div>
               </div>
 
-              {/* 🖼️ ULTRA SIMPLE THUMBNAILS */}
-              {images.length > 1 && (
-                <div className="flex gap-3 pb-2 overflow-x-auto scrollbar-hide pt-6">
-                  {images.map((img: string, i: number) => (
-                    <button 
-                      key={i} 
-                      onClick={() => setActiveImage(i)}
-                      className={`relative w-14 h-14 rounded-2xl overflow-hidden transition-all duration-300 ${activeImage === i ? 'scale-110 shadow-2xl opacity-100 border-2 border-[#FF7F32]' : 'opacity-40 hover:opacity-100 hover:scale-105'}`}
-                    >
-                      <img src={img} className="w-full h-full object-cover" alt="" onError={handleImageError} />
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="space-y-2">
+                <h1 className="text-2xl md:text-4xl font-black text-[#1a2b49] leading-tight tracking-tighter">
+                  {property.title}
+                </h1>
+                <p className="text-slate-400 font-bold text-lg flex items-center gap-2">
+                  <MapPin size={20} className="text-[#FF7F32]" />
+                  {property.fullAddress || `${property.sector}, ${property.city}`}
+                </p>
+              </div>
             </div>
-            
-            <div className="bg-white/10 backdrop-blur-2xl rounded-[48px] p-10 md:p-12 border border-white/20 text-center min-w-[320px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500">
-              <div className="text-[11px] font-black uppercase tracking-[0.4em] text-orange-400 mb-2">Asking Price</div>
-              <div className="text-6xl font-black tracking-tighter leading-none">₹{property.price.toLocaleString()}</div>
-              <div className="text-xs font-bold text-white/50 uppercase tracking-[0.2em] mt-3">{property.priceType} Commitment</div>
+
+            {/* Elite Stats Bar */}
+            <div className="grid grid-cols-3 gap-8 py-10 border-y border-slate-50">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-[#FF7F32] shadow-sm">
+                  <Bed size={24} />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-[#1a2b49]">{property.bhk}</div>
+                  <div className="text-[9px] font-black uppercase text-slate-300 tracking-widest">Bedrooms</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-[#FF7F32] shadow-sm">
+                  <Bath size={24} />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-[#1a2b49]">{property.bathrooms}</div>
+                  <div className="text-[9px] font-black uppercase text-slate-300 tracking-widest">Bathrooms</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-[#FF7F32] shadow-sm">
+                  <Maximize size={24} />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-[#1a2b49]">{property.totalArea}</div>
+                  <div className="text-[9px] font-black uppercase text-slate-300 tracking-widest">{property.areaUnit}</div>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* 2. Interactive Inquiry Card (High Visibility) */}
+          <div className="w-full lg:w-[420px] shrink-0 sticky top-24">
+            <div className="bg-white rounded-[48px] p-10 border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] space-y-8 overflow-hidden relative group transition-all hover:shadow-[0_48px_80px_-16px_rgba(0,0,0,0.1)]">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-orange-500/5 rounded-full blur-[60px] -mr-20 -mt-20 group-hover:bg-orange-500/10 transition-all duration-700" />
+              
+              <div className="relative z-10 space-y-8">
+                <div className="flex items-center gap-5">
+                  <div className="w-16 h-16 bg-emerald-50 rounded-[24px] flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100/50">
+                    <MessageCircle size={32} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-[#1a2b49] tracking-tighter">Interested?</h3>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Direct Connect Engine</p>
+                  </div>
+                </div>
+
+                <p className="text-sm font-medium text-slate-500 leading-relaxed italic">
+                  "Get exclusive insights, schedule a private tour, or discuss the valuation directly with the listing manager."
+                </p>
+
+                <div className="space-y-4">
+                  <Button 
+                    onClick={() => setIsEnquiryOpen(true)}
+                    className="w-full h-16 rounded-[24px] bg-[#1a2b49] hover:bg-[#FF7F32] text-white font-black text-lg gap-3 shadow-2xl shadow-slate-900/10 transition-all duration-500 active:scale-95 group border-none"
+                  >
+                    <ShieldCheck size={20} className="group-hover:rotate-12 transition-transform" /> 
+                    Start Quick Inquiry
+                  </Button>
+                  
+                  <div className="flex flex-col gap-2 pt-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 text-center mb-1">Listing Reference</p>
+                    <div className="text-center font-black text-[#1a2b49] text-sm uppercase tracking-widest bg-slate-50 py-3 rounded-2xl">
+                      #{property._id.slice(-8).toUpperCase()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
       {/* 🏡 CONTENT GRID */}
-      <main className="max-w-7xl mx-auto px-8 md:px-16 pt-16 pb-32">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <main className="max-w-7xl mx-auto px-6 md:px-16 pb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 border-t border-slate-100 pt-12">
           
           {/* LEFT: Details */}
-          <div className="lg:col-span-8 space-y-20">
+          <div className="lg:col-span-8 space-y-16">
             
-            {/* Quick Metrics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { label: "Bedrooms", val: property.bhk, icon: <Bed size={24}/> },
-                { label: "Bathrooms", val: property.bathrooms, icon: <Bath size={24}/> },
-                { label: "Living Area", val: `${property.totalArea} ${property.areaUnit}`, icon: <Maximize size={24}/> },
-                { label: "Property Age", val: `${property.age} Yrs`, icon: <Clock size={24}/> }
-              ].map((m, i) => (
-                <div key={i} className="group p-8 rounded-[40px] bg-slate-50 border border-slate-100 hover:bg-white hover:border-[#FF7F32]/20 hover:shadow-2xl transition-all duration-500">
-                  <div className="text-[#FF7F32] mb-4 group-hover:scale-110 transition-transform duration-500">{m.icon}</div>
-                  <div className="text-2xl font-black text-[#1a2b49] tracking-tighter">{m.val}</div>
-                  <div className="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">{m.label}</div>
-                </div>
-              ))}
-            </div>
-
             {/* About Section */}
             <div className="space-y-8">
               <div className="flex items-center gap-4">
@@ -292,59 +403,31 @@ export default function PropertyDetailsPage() {
             )}
           </div>
 
-          {/* RIGHT: Agent/Sidebar */}
+          {/* RIGHT: Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            
-            {/* Contact Card */}
-            <div className="sticky top-12 bg-[#1a2b49] rounded-[48px] p-10 md:p-12 text-white shadow-2xl shadow-slate-900/40 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-40 h-40 bg-orange-500/20 rounded-full blur-[60px] -mr-20 -mt-20" />
-               
-               <div className="relative z-10 space-y-10">
-                  <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 bg-white/10 rounded-[28px] border border-white/20 flex items-center justify-center text-white">
-                      <ShieldCheck size={40} strokeWidth={1} />
+            <div className="sticky top-24 space-y-8">
+
+              {/* Owner Dashboard (Only if isOwner) */}
+              {isOwner && (
+                <div className="bg-[#1a2b49] rounded-[48px] p-10 text-white shadow-2xl shadow-slate-900/20 relative overflow-hidden group">
+                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-500/10 rounded-full blur-[60px] -ml-16 -mb-16" />
+                  <div className="relative z-10 space-y-6 text-center">
+                    <div className="w-16 h-16 bg-white/10 rounded-[24px] border border-white/20 flex items-center justify-center text-[#FF7F32] mx-auto mb-2">
+                      <Pencil size={28} />
                     </div>
                     <div>
-                      <div className="text-[10px] font-black uppercase tracking-widest text-orange-400">Verified Listing</div>
-                      <div className="text-2xl font-black tracking-tighter leading-none mt-1">ProperyPro <br/> Agent Team</div>
+                      <h4 className="text-xl font-black tracking-tight">Owner Control</h4>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage Your Asset</p>
                     </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    {isOwner && (
-                      <Button 
-                        onClick={() => setIsEditModalOpen(true)}
-                        className="w-full h-16 rounded-3xl bg-white text-[#1a2b49] hover:bg-orange-50 font-black text-lg gap-3 border-2 border-dashed border-orange-500/30 transition-all hover:border-[#FF7F32]"
-                      >
-                        <Pencil size={20} /> Edit Listing Details
-                      </Button>
-                    )}
-                    <Button className="w-full h-16 rounded-3xl bg-[#FF7F32] hover:bg-orange-600 text-white font-black text-lg gap-3 shadow-xl shadow-orange-500/20">
-                      <Phone size={20} fill="currentColor"/> Call Now
-                    </Button>
-                    <Button variant="outline" className="w-full h-16 rounded-3xl bg-white/5 hover:bg-white/10 text-white border-white/10 font-black text-lg gap-3 backdrop-blur-md">
-                      <MessageCircle size={20} fill="currentColor"/> WhatsApp
+                    <Button 
+                      onClick={() => setIsEditModalOpen(true)}
+                      className="w-full h-14 rounded-2xl bg-[#FF7F32] hover:bg-orange-600 text-white font-black text-sm gap-3 shadow-xl shadow-orange-500/20 transition-all border-none"
+                    >
+                      Edit Property Listing
                     </Button>
                   </div>
-
-                  <div className="pt-8 border-t border-white/10 flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-bold text-xs">Listing ID</span>
-                      <span className="font-black text-xs uppercase tracking-widest">#{property._id.slice(-8).toUpperCase()}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-bold text-xs">Neighborhood</span>
-                      <span className="font-black text-xs uppercase tracking-widest">{property.locality || "Tricity"}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 flex items-start gap-4">
-                    <Info size={24} className="text-[#FF7F32] shrink-0" />
-                    <p className="text-[11px] font-medium text-slate-400 leading-relaxed italic">
-                      "Professional guidance for the best market value properties in Chandigarh Capital Region."
-                    </p>
-                  </div>
-               </div>
+                </div>
+              )}
             </div>
 
             {/* Neighborhood Insights */}
@@ -376,6 +459,13 @@ export default function PropertyDetailsPage() {
           </div>
         </div>
       </main>
+
+      {/* 📥 ENQUIRY MODAL */}
+      <EnquiryModal 
+        isOpen={isEnquiryOpen} 
+        onClose={() => setIsEnquiryOpen(false)} 
+        property={property} 
+      />
     </div>
   );
 }

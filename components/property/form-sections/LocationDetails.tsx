@@ -12,7 +12,7 @@ import { CITIES, TRICITY_MAP } from "@/lib/constants";
 import { FormSectionProps } from "@/types/property-form";
 
 const sectionHeader = "flex items-center gap-2 text-[#1a2b49] font-black text-sm uppercase tracking-widest mb-8 border-b border-gray-100 pb-3";
-const inputBase = "bg-gray-50 border-gray-200 rounded-xl px-4 py-6 text-sm text-[#1a2b49] placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-orange-500/5 focus:border-[#FF7F32] transition-all outline-none w-full relative z-10";
+const inputBase = "bg-gray-50 border-gray-200 rounded-xl px-4 h-[56px] text-sm text-[#1a2b49] placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-orange-500/5 focus:border-[#FF7F32] transition-all outline-none w-full relative z-10";
 
 export function LocationDetails({ formData, handleInputChange, handleSelectChange }: FormSectionProps) {
   const [isSectorOpen, setIsSectorOpen] = useState(false);
@@ -53,7 +53,7 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* City Selection */}
         <div className="space-y-2">
-          <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">City</Label>
+          <Label className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-1">City <span className="text-red-500">*</span></Label>
           <Select value={formData.city} onValueChange={handleCityChange}>
             <SelectTrigger className={inputBase}>
               <SelectValue placeholder="Select City" />
@@ -141,7 +141,6 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
             onChange={handleInputChange}
             placeholder="e.g. Rohini"
             className={inputBase}
-            required
           />
         </div>
 
@@ -166,7 +165,6 @@ export function LocationDetails({ formData, handleInputChange, handleSelectChang
             onChange={handleInputChange}
             placeholder="Complete Address"
             className={inputBase}
-            required
           />
         </div>
       </div>

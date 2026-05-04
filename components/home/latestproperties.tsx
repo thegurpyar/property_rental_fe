@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, Search, MapPin, Tag, Home, Armchair, IndianRupee, Layers, SlidersHorizontal, Info } from "lucide-react";
 import { Button } from "../ui/button";
 import PropertyCard from "../property/propertycard";
+import { EnquiryModal } from "../property/EnquiryModal";
 import apiClient from "@/lib/apClient";
 import { Input } from "../ui/input";
 import { CITIES, TRICITY_MAP } from "@/lib/constants";
@@ -35,8 +36,10 @@ function LatestPropertiesContent() {
   const [pagination, setPagination] = useState({
     total: 0,
     totalPages: 1,
-    limit: 4
   });
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [enquiryForm, setEnquiryForm] = useState({ name: "", phone: "" });
 
   // 🧪 Integrated Filter States
   const [filters, setFilters] = useState({
@@ -90,7 +93,8 @@ function LatestPropertiesContent() {
             baths: prop.bathrooms || 0,
             sqft: prop.totalArea || 0,
             postedAt: new Date(prop.createdAt).toLocaleDateString(),
-            slug: prop.slug
+            slug: prop.slug,
+            status: prop.status || "available"
           };
         });
         setProperties(mappedProperties);
@@ -126,6 +130,13 @@ function LatestPropertiesContent() {
 
   const handlePrev = () => {
     if (page > 1) setPage(prev => prev - 1);
+  };
+
+  const handleEnquiryClick = (e: React.MouseEvent, prop: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProperty(prop);
+    setIsEnquiryOpen(true);
   };
 
   return (
@@ -309,7 +320,7 @@ function LatestPropertiesContent() {
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-40">
                   <Loader2 className="w-16 h-16 text-[#FF7F32] animate-spin mb-6" />
-                  <p className="text-[#1a2b49] font-black uppercase tracking-[0.3em] text-xs">Syncing properties...</p>
+                  <p className="text-[#1a2b49] font-black uppercase tracking-[0.3em] text-xs">Loading properties...</p>
                 </div>
               ) : properties.length === 0 ? (
                 <div className="bg-white rounded-[60px] py-40 border border-dashed border-slate-200 text-center flex flex-col items-center">
@@ -331,7 +342,7 @@ function LatestPropertiesContent() {
                         className="animate-fade-in-up"
                         style={{ animationDelay: `${(index + 1) * 100}ms` }}
                       >
-                        <PropertyCard property={property} />
+                        <PropertyCard property={property} onEnquiry={handleEnquiryClick} />
                       </div>
                     ))}
                   </div>
@@ -374,6 +385,12 @@ function LatestPropertiesContent() {
           </main>
         </div>
       </div>
+
+      <EnquiryModal 
+        isOpen={isEnquiryOpen} 
+        onClose={() => setIsEnquiryOpen(false)} 
+        property={selectedProperty} 
+      />
     </section>
   );
 }

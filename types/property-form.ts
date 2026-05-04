@@ -3,21 +3,21 @@ export interface PropertyFormData {
   purpose: string;
   category: string;
   price: string;
-  priceType: string;
-  bhk: string;
-  bathrooms: string;
+  priceType?: string;
+  bhk?: string;
+  bathrooms?: string;
   totalArea: string;
-  areaUnit: string;
+  areaUnit?: string;
   city: string;
-  sector: string;
-  locality: string;
-  landmark: string;
-  fullAddress: string;
-  furnishing: string;
-  parking: string;
-  age: string;
+  sector?: string;
+  locality?: string;
+  landmark?: string;
+  fullAddress?: string;
+  furnishing?: string;
+  parking?: string;
+  age?: string;
   amenities: string[];
-  description: string;
+  description?: string;
 }
 
 export interface FormSectionProps {
