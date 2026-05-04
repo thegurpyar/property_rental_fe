@@ -101,7 +101,6 @@ function LatestPropertiesContent() {
         setPagination({
           total: res.data.data.pagination.total,
           totalPages: res.data.data.pagination.totalPages,
-          limit: res.data.data.pagination.limit
         });
       }
     } catch (error) {
