@@ -139,7 +139,7 @@ function LatestPropertiesContent() {
   };
 
   return (
-    <section id="latest-properties" ref={sectionRef} className="py-24 sm:py-32 px-6 sm:px-10 md:px-20 bg-slate-50/20">
+    <section ref={sectionRef} className="py-24 sm:py-32 px-6 sm:px-10 md:px-20 bg-slate-50/20">
       <div className="max-w-7xl mx-auto">
 
         {/* --- 🚀 UNIFIED ELITE HEADER --- */}
@@ -314,7 +314,7 @@ function LatestPropertiesContent() {
           </aside>
 
           {/* --- 🏡 PROPERTIES FLOW --- */}
-          <main className="flex-grow">
+          <main id="latest-properties" className="flex-grow scroll-mt-24">
             <div className="relative">
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-40">
