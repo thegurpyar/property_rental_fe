@@ -130,105 +130,181 @@ export default function AdminProperties() {
         </div>
       </div>
 
-      {/* ── Table (Desktop) ── */}
-      <Card className="rounded-[48px] border-none bg-white shadow-2xl shadow-slate-200/50 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left min-w-[1000px]">
-            <thead className="bg-slate-50/50">
-              <tr>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Property Details</th>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Valuation</th>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Status</th>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Approve</th>
-                <th className="px-10 py-7"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="py-40 text-center">
-                    <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={48} />
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mt-8">Loading Inventory...</p>
-                  </td>
-                </tr>
-              ) : properties.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="py-40 text-center">
-                    <Building2 className="mx-auto text-slate-100 mb-8" size={72} />
-                    <h3 className="text-2xl font-black text-[#1a2b49] tracking-tight">No Listings Found</h3>
-                  </td>
-                </tr>
-              ) : (
-                properties.map((prop) => {
-                  const firstImg = prop.images?.[0]?.url;
-                  let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
-                  if (firstImg) {
-                    if (firstImg.startsWith("http")) fullImgUrl = firstImg;
-                    else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
-                  }
+      {/* ── Table (Desktop) & Cards (Mobile) ── */}
+      <div className="space-y-6">
+        {/* Mobile View: Cards */}
+        <div className="grid grid-cols-1 gap-6 md:hidden">
+          {loading ? (
+            <div className="bg-white rounded-[32px] p-20 text-center shadow-sm">
+              <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={32} />
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 mt-6">Syncing Inventory...</p>
+            </div>
+          ) : properties.length === 0 ? (
+            <div className="bg-white rounded-[32px] p-20 text-center shadow-sm border border-slate-50">
+              <Building2 className="mx-auto text-slate-100 mb-6" size={48} />
+              <h3 className="text-xl font-black text-[#1a2b49] tracking-tight">No Listings</h3>
+            </div>
+          ) : (
+            properties.map((prop) => {
+              const firstImg = prop.images?.[0]?.url;
+              let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
+              if (firstImg) {
+                if (firstImg.startsWith("http")) fullImgUrl = firstImg;
+                else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
+              }
 
-                  return (
-                    <tr key={prop._id} className="group hover:bg-slate-50/50 transition-all duration-300">
-                      <td className="px-10 py-8">
-                        <div className="flex items-center gap-6">
-                          <div className="w-16 h-16 rounded-[24px] overflow-hidden border border-orange-100 shadow-sm flex-shrink-0">
-                            <img src={fullImgUrl} alt="thumb" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                          </div>
-                          <div>
-                            <div className="font-black text-[#1a2b49] text-base group-hover:text-[#FF7F32] transition-colors">{prop.title}</div>
-                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">{prop.locality}, {prop.city}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="text-base font-black text-[#1a2b49]">₹{prop.price?.toLocaleString()}</div>
-                        <div className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">{prop.userId?.full_name || "Enterprise Owner"}</div>
-                      </td>
-                      <td className="px-10 py-8 text-center">
-                        <div className="flex justify-center">
-                          {getStatusBadge(prop.status)}
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="flex flex-col items-center">
-                          <button
-                            onClick={() => handleStatusToggle(prop._id)}
-                            className={`relative w-12 h-6 rounded-full transition-all duration-300 p-1 flex items-center ${prop.status === "available" ? "bg-emerald-500" : "bg-slate-200"
-                              }`}
-                          >
-                            <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300 transform ${prop.status === "available" ? "translate-x-6" : "translate-x-0"
-                              }`} />
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8 text-right">
-                        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
-                            <ExternalLink size={20} />
-                          </button>
-                          <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
-                            <MoreVertical size={20} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+              return (
+                <Card key={prop._id} className="rounded-[32px] p-6 border-none shadow-xl shadow-slate-200/40 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-20 rounded-2xl overflow-hidden border border-orange-50 shrink-0">
+                      <img src={fullImgUrl} alt="" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-black text-[#1a2b49] text-lg truncate tracking-tight">{prop.title}</h3>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 truncate">
+                        {prop.locality}, {prop.city}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-50">
+                    <div>
+                      <div className="text-[9px] font-black uppercase text-slate-300 tracking-widest mb-1">Valuation</div>
+                      <div className="text-lg font-black text-[#1a2b49]">₹{prop.price?.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] font-black uppercase text-slate-300 tracking-widest mb-1">Status</div>
+                      <div className="flex">{getStatusBadge(prop.status)}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Approve</div>
+                      <button
+                        onClick={() => handleStatusToggle(prop._id)}
+                        className={`relative w-10 h-5 rounded-full transition-all duration-300 p-1 flex items-center ${prop.status === "available" ? "bg-emerald-500" : "bg-slate-200"}`}
+                      >
+                        <div className={`w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300 transform ${prop.status === "available" ? "translate-x-5" : "translate-x-0"}`} />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl hover:bg-orange-50 hover:text-[#FF7F32] transition-all">
+                        <ExternalLink size={18} />
+                      </button>
+                      <button className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl hover:bg-orange-50 hover:text-[#FF7F32] transition-all">
+                        <MoreVertical size={18} />
+                      </button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })
+          )}
         </div>
-      </Card>
+
+        {/* Desktop View: Table */}
+        <Card className="hidden md:block rounded-[48px] border-none bg-white shadow-2xl shadow-slate-200/50 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[1000px]">
+              <thead className="bg-slate-50/50">
+                <tr>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Property Details</th>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Valuation</th>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Status</th>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Approve</th>
+                  <th className="px-10 py-7"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {loading ? (
+                  <tr>
+                    <td colSpan={5} className="py-40 text-center">
+                      <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={48} />
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mt-8">Loading Inventory...</p>
+                    </td>
+                  </tr>
+                ) : properties.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-40 text-center">
+                      <Building2 className="mx-auto text-slate-100 mb-8" size={72} />
+                      <h3 className="text-2xl font-black text-[#1a2b49] tracking-tight">No Listings Found</h3>
+                    </td>
+                  </tr>
+                ) : (
+                  properties.map((prop) => {
+                    const firstImg = prop.images?.[0]?.url;
+                    let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
+                    if (firstImg) {
+                      if (firstImg.startsWith("http")) fullImgUrl = firstImg;
+                      else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
+                    }
+
+                    return (
+                      <tr key={prop._id} className="group hover:bg-slate-50/50 transition-all duration-300">
+                        <td className="px-10 py-8">
+                          <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-[24px] overflow-hidden border border-orange-100 shadow-sm flex-shrink-0">
+                              <img src={fullImgUrl} alt="thumb" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            </div>
+                            <div>
+                              <div className="font-black text-[#1a2b49] text-base group-hover:text-[#FF7F32] transition-colors">{prop.title}</div>
+                              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">{prop.locality}, {prop.city}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="text-base font-black text-[#1a2b49]">₹{prop.price?.toLocaleString()}</div>
+                          <div className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">{prop.userId?.full_name || "Enterprise Owner"}</div>
+                        </td>
+                        <td className="px-10 py-8 text-center">
+                          <div className="flex justify-center">
+                            {getStatusBadge(prop.status)}
+                          </div>
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="flex flex-col items-center">
+                            <button
+                              onClick={() => handleStatusToggle(prop._id)}
+                              className={`relative w-12 h-6 rounded-full transition-all duration-300 p-1 flex items-center ${prop.status === "available" ? "bg-emerald-500" : "bg-slate-200"
+                                }`}
+                            >
+                              <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300 transform ${prop.status === "available" ? "translate-x-6" : "translate-x-0"
+                                }`} />
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-10 py-8 text-right">
+                          <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
+                              <ExternalLink size={20} />
+                            </button>
+                            <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
+                              <MoreVertical size={20} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
 
       {/* ── Pagination ── */}
-      <div className="flex items-center justify-between px-10 pb-20">
-        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-300">Displaying {properties.length} of {pagination.total} High-Value Assets</p>
-        <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:px-10 pb-20">
+        <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-slate-300 text-center md:text-left order-2 md:order-1">
+          {pagination.total > 0 ? `Displaying ${properties.length} of ${pagination.total} High-Value Assets` : "No assets to display"}
+        </p>
+        <div className="flex gap-4 order-1 md:order-2 w-full md:w-auto">
           <Button
             variant="ghost"
             disabled={filters.page === 1 || loading}
             onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
-            className="px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100"
+            className="flex-1 md:flex-none px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white"
           >
             Prev
           </Button>
@@ -236,7 +312,7 @@ export default function AdminProperties() {
             variant="ghost"
             disabled={filters.page >= pagination.totalPages || loading}
             onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
-            className="px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white shadow-sm"
+            className="flex-1 md:flex-none px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white shadow-sm"
           >
             Next Set
           </Button>

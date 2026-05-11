@@ -97,7 +97,7 @@ export function MediaDetails({
           ) : (
             <div className="grid grid-cols-4 gap-4 w-full h-full p-6 overflow-y-auto">
               {images.map((img, index) => {
-                const isVideo = img.includes("video/mp4") || img.includes("video/quicktime") || img.includes("video/x-matroska") || img.includes("video/webm");
+                const isVideo = img.toLowerCase().match(/\.(mp4|webm|ogg|mov|m4v)$/) || img.includes("video/") || img.startsWith("data:video/");
                 return (
                   <div key={index} className="relative group/img h-20">
                     {isVideo ? (
@@ -109,9 +109,9 @@ export function MediaDetails({
                       type="button"
                       disabled={isLoading}
                       onClick={(e) => { e.stopPropagation(); removeImage(index); }}
-                      className="absolute -top-2 -right-2 bg-white text-[#1a2b49] p-1 rounded-full shadow-xl hover:bg-red-500 hover:text-white transition-all scale-0 group-hover/img:scale-100 z-10"
+                      className="absolute -top-2 -right-2 bg-white text-rose-500 p-1.5 rounded-full shadow-lg hover:bg-rose-500 hover:text-white transition-all z-10 border border-slate-100 flex items-center justify-center"
                     >
-                      <X size={12} />
+                      <X size={14} strokeWidth={3} />
                     </button>
                     {isVideo && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl pointer-events-none">

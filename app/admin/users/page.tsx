@@ -290,9 +290,7 @@ export default function UsersList() {
                           >
                             <Trash2 size={18} />
                           </button>
-                          <button className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 rounded-xl transition-all">
-                            <MoreVertical size={20} className="text-slate-300" />
-                          </button>
+
                         </div>
                       </td>
                     </tr>
@@ -334,9 +332,7 @@ export default function UsersList() {
                   >
                     <Trash2 size={16} />
                   </button>
-                  <button className="w-8 h-8 flex items-center justify-center hover:bg-slate-50 rounded-lg transition-all">
-                    <MoreVertical size={18} className="text-slate-300" />
-                  </button>
+
                 </div>
               </div>
 

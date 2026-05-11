@@ -109,15 +109,18 @@ export default function PropertyDetailsPage() {
     isMatch: isOwner
   });
 
-  const media = property.images?.map((imgObj: any) => {
-    const rawUrl = imgObj.url || "";
-    if (rawUrl.startsWith("http")) return rawUrl;
-    const fileName = rawUrl.split('/').pop();
-    if (!fileName) return "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80";
-    return `https://module-project-tx70.onrender.com/uploads/${fileName}`;
-  }) || [];
+  const media = (property.images && property.images.length > 0)
+    ? property.images.map((imgObj: any) => {
+        const rawUrl = imgObj.url || "";
+        if (rawUrl.startsWith("http")) return rawUrl;
+        const fileName = rawUrl.split('/').pop();
+        if (!fileName) return "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80";
+        return `https://module-project-tx70.onrender.com/uploads/${fileName}`;
+      })
+    : ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80"];
 
-  const isVideo = (url: string) => {
+  const isVideo = (url: any) => {
+    if (!url || typeof url !== "string") return false;
     return url.toLowerCase().match(/\.(mp4|webm|ogg|mov|m4v)$/) || url.includes("video/");
   };
 
@@ -245,7 +248,7 @@ export default function PropertyDetailsPage() {
               
               <div className="space-y-1">
                 <h2 className="text-5xl md:text-6xl font-black text-[#1a2b49] tracking-tight">
-                  ₹{property.price.toLocaleString()}
+                  ₹{property.price?.toLocaleString() || "0"}
                 </h2>
                 <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">
                   Total Investment Commitment
@@ -324,12 +327,7 @@ export default function PropertyDetailsPage() {
                     Start Quick Inquiry
                   </Button>
                   
-                  <div className="flex flex-col gap-2 pt-2">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 text-center mb-1">Listing Reference</p>
-                    <div className="text-center font-black text-[#1a2b49] text-sm uppercase tracking-widest bg-slate-50 py-3 rounded-2xl">
-                      #{property._id.slice(-8).toUpperCase()}
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>

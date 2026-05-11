@@ -118,7 +118,7 @@ export default function AdminApprovals() {
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }))}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {["pending", "available", "rejected", "all"].map((s) => (
               <button
                 key={s}
@@ -132,99 +132,173 @@ export default function AdminApprovals() {
         </div>
       </div>
 
-      {/* ── Table ── */}
-      <Card className="rounded-[48px] border-none bg-white shadow-2xl shadow-slate-200/50 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left min-w-[1000px]">
-            <thead className="bg-slate-50/50">
-              <tr>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Asset Details</th>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Current Status</th>
-                <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Approve / Reject</th>
-                <th className="px-10 py-7"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {loading ? (
-                <tr>
-                  <td colSpan={4} className="py-40 text-center">
-                    <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={48} />
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mt-8">Fetching Approvals...</p>
-                  </td>
-                </tr>
-              ) : properties.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="py-40 text-center">
-                    <ShieldCheck className="mx-auto text-slate-100 mb-8" size={72} />
-                    <h3 className="text-2xl font-black text-[#1a2b49] tracking-tight">Clear - No Pending Approvals</h3>
-                  </td>
-                </tr>
-              ) : (
-                properties.map((prop) => {
-                  const firstImg = prop.images?.[0]?.url;
-                  let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
-                  if (firstImg) {
-                    if (firstImg.startsWith("http")) fullImgUrl = firstImg;
-                    else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
-                  }
+      {/* ── Assets Display (Desktop Table / Mobile Cards) ── */}
+      <div className="space-y-6">
+        {/* Mobile Cards */}
+        <div className="grid grid-cols-1 gap-6 md:hidden">
+          {loading ? (
+            <div className="bg-white rounded-[32px] p-20 text-center shadow-sm">
+              <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={32} />
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 mt-6">Fetching Items...</p>
+            </div>
+          ) : properties.length === 0 ? (
+            <div className="bg-white rounded-[32px] p-20 text-center shadow-sm border border-slate-50">
+              <ShieldCheck className="mx-auto text-slate-100 mb-6" size={48} />
+              <h3 className="text-xl font-black text-[#1a2b49] tracking-tight text-center">No Pending Tasks</h3>
+            </div>
+          ) : (
+            properties.map((prop) => {
+              const firstImg = prop.images?.[0]?.url;
+              let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
+              if (firstImg) {
+                if (firstImg.startsWith("http")) fullImgUrl = firstImg;
+                else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
+              }
 
-                  return (
-                    <tr key={prop._id} className="group hover:bg-slate-50/50 transition-all duration-300">
-                      <td className="px-10 py-8">
-                        <div className="flex items-center gap-6">
-                          <div className="w-16 h-16 rounded-[24px] overflow-hidden border border-orange-100 shadow-sm flex-shrink-0 bg-black">
-                            <img src={fullImgUrl} alt="thumb" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                          </div>
-                          <div>
-                            <div className="font-black text-[#1a2b49] text-base group-hover:text-[#FF7F32] transition-colors">{prop.title}</div>
-                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">{prop.locality}, {prop.city}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8 text-center">
-                        <div className="flex justify-center">
-                          {getStatusBadge(prop.status)}
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="flex flex-col items-center">
-                          <button
-                            onClick={() => handleStatusToggle(prop._id, prop.status)}
-                            className={`relative w-14 h-7 rounded-full transition-all duration-300 p-1 flex items-center ${
-                              prop.status === "available" ? "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]" : "bg-slate-200"
-                            }`}
-                          >
-                            <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 transform ${
-                              prop.status === "available" ? "translate-x-7" : "translate-x-0"
-                            }`} />
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8 text-right">
-                        <div className="flex items-center justify-end gap-3">
-                          <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
-                            <ExternalLink size={20} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+              return (
+                <Card key={prop._id} className="rounded-[32px] p-6 border-none shadow-xl shadow-slate-200/40 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-orange-50 shrink-0 bg-black">
+                      <img src={fullImgUrl} alt="" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-black text-[#1a2b49] text-base truncate tracking-tight">{prop.title}</h3>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 truncate">
+                        {prop.locality}, {prop.city}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-4 border-y border-slate-50">
+                    <div>
+                      <div className="text-[8px] font-black uppercase text-slate-300 tracking-widest mb-1">Current State</div>
+                      {getStatusBadge(prop.status)}
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[8px] font-black uppercase text-slate-300 tracking-widest mb-1">Approval Action</div>
+                      <div className="flex justify-end">
+                        <button
+                          onClick={() => handleStatusToggle(prop._id, prop.status)}
+                          className={`relative w-12 h-6 rounded-full transition-all duration-300 p-1 flex items-center ${
+                            prop.status === "available" ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]" : "bg-slate-200"
+                          }`}
+                        >
+                          <div className={`w-4 h-4 bg-white rounded-full shadow-md transition-all duration-300 transform ${
+                            prop.status === "available" ? "translate-x-6" : "translate-x-0"
+                          }`} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-[10px] font-medium text-slate-400">UID: {prop._id?.slice(-8).toUpperCase()}</p>
+                    <Button variant="ghost" className="h-10 px-4 rounded-xl text-slate-400 hover:text-[#1a2b49] gap-2 font-bold text-[10px] uppercase tracking-widest">
+                      <ExternalLink size={14} /> View
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })
+          )}
         </div>
-      </Card>
+
+        {/* Desktop Table */}
+        <Card className="hidden md:block rounded-[48px] border-none bg-white shadow-2xl shadow-slate-200/50 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[1000px]">
+              <thead className="bg-slate-50/50">
+                <tr>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Asset Details</th>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Current Status</th>
+                  <th className="px-10 py-7 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Approve / Reject</th>
+                  <th className="px-10 py-7"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} className="py-40 text-center">
+                      <Loader2 className="animate-spin mx-auto text-[#FF7F32]" size={48} />
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mt-8">Fetching Approvals...</p>
+                    </td>
+                  </tr>
+                ) : properties.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-40 text-center">
+                      <ShieldCheck className="mx-auto text-slate-100 mb-8" size={72} />
+                      <h3 className="text-2xl font-black text-[#1a2b49] tracking-tight">Clear - No Pending Approvals</h3>
+                    </td>
+                  </tr>
+                ) : (
+                  properties.map((prop) => {
+                    const firstImg = prop.images?.[0]?.url;
+                    let fullImgUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=100&q=80";
+                    if (firstImg) {
+                      if (firstImg.startsWith("http")) fullImgUrl = firstImg;
+                      else fullImgUrl = `https://module-project-tx70.onrender.com/uploads/${firstImg.split('/').pop()}`;
+                    }
+
+                    return (
+                      <tr key={prop._id} className="group hover:bg-slate-50/50 transition-all duration-300">
+                        <td className="px-10 py-8">
+                          <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-[24px] overflow-hidden border border-orange-100 shadow-sm flex-shrink-0 bg-black">
+                              <img src={fullImgUrl} alt="thumb" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            </div>
+                            <div>
+                              <div className="font-black text-[#1a2b49] text-base group-hover:text-[#FF7F32] transition-colors">{prop.title}</div>
+                              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">{prop.locality}, {prop.city}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-10 py-8 text-center">
+                          <div className="flex justify-center">
+                            {getStatusBadge(prop.status)}
+                          </div>
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="flex flex-col items-center">
+                            <button
+                              onClick={() => handleStatusToggle(prop._id, prop.status)}
+                              className={`relative w-14 h-7 rounded-full transition-all duration-300 p-1 flex items-center ${
+                                prop.status === "available" ? "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]" : "bg-slate-200"
+                              }`}
+                            >
+                              <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 transform ${
+                                prop.status === "available" ? "translate-x-7" : "translate-x-0"
+                              }`} />
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-10 py-8 text-right">
+                          <div className="flex items-center justify-end gap-3">
+                            <button className="p-3 hover:bg-slate-100 rounded-[16px] text-slate-300 hover:text-[#1a2b49] transition-all">
+                              <ExternalLink size={20} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
 
       {/* ── Pagination ── */}
-      <div className="flex items-center justify-between px-10 pb-20">
-        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-300">{pagination.total} Items Under Review</p>
-        <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:px-10 pb-20">
+        <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-slate-300 order-2 md:order-1 text-center md:text-left">
+          {pagination.total} High-Value Items Under Review
+        </p>
+        <div className="flex gap-4 order-1 md:order-2 w-full md:w-auto">
           <Button 
             variant="ghost" 
             disabled={filters.page === 1 || loading}
             onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
-            className="px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100"
+            className="flex-1 md:flex-none px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white"
           >
             Prev
           </Button>
@@ -232,7 +306,7 @@ export default function AdminApprovals() {
             variant="ghost" 
             disabled={filters.page >= pagination.totalPages || loading}
             onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
-            className="px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white"
+            className="flex-1 md:flex-none px-8 h-14 rounded-[20px] font-black text-[11px] uppercase tracking-widest border border-slate-100 bg-white shadow-sm"
           >
             Next
           </Button>
