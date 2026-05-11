@@ -297,42 +297,6 @@ export default function PropertyDetailsPage() {
               </div>
             </div>
           </div>
-
-          {/* 2. Interactive Inquiry Card (High Visibility) */}
-          <div className="w-full lg:w-[420px] shrink-0 sticky top-24">
-            <div className="bg-white rounded-[48px] p-10 border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] space-y-8 overflow-hidden relative group transition-all hover:shadow-[0_48px_80px_-16px_rgba(0,0,0,0.1)]">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-orange-500/5 rounded-full blur-[60px] -mr-20 -mt-20 group-hover:bg-orange-500/10 transition-all duration-700" />
-              
-              <div className="relative z-10 space-y-8">
-                <div className="flex items-center gap-5">
-                  <div className="w-16 h-16 bg-emerald-50 rounded-[24px] flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100/50">
-                    <MessageCircle size={32} strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-black text-[#1a2b49] tracking-tighter">Interested?</h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Direct Connect Engine</p>
-                  </div>
-                </div>
-
-                <p className="text-sm font-medium text-slate-500 leading-relaxed italic">
-                  "Get exclusive insights, schedule a private tour, or discuss the valuation directly with the listing manager."
-                </p>
-
-                <div className="space-y-4">
-                  <Button 
-                    onClick={() => setIsEnquiryOpen(true)}
-                    className="w-full h-16 rounded-[24px] bg-[#1a2b49] hover:bg-[#FF7F32] text-white font-black text-lg gap-3 shadow-2xl shadow-slate-900/10 transition-all duration-500 active:scale-95 group border-none"
-                  >
-                    <ShieldCheck size={20} className="group-hover:rotate-12 transition-transform" /> 
-                    Start Quick Inquiry
-                  </Button>
-                  
-
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 

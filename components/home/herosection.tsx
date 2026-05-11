@@ -53,7 +53,10 @@ export default function HeroSection() {
               </p>
 
               <div className="flex flex-wrap gap-4 sm:gap-6 items-center mb-8 sm:mb-14 md:mb-16 opacity-0 animate-fade-in-up delay-300">
-                <Button className="bg-[#FF7F32] hover:bg-orange-600 text-white h-auto px-5 py-3 sm:px-10 sm:py-6 rounded-full font-black text-sm sm:text-lg shadow-2xl border-none gap-3 group/btn transition-all hover:scale-105">
+                <Button 
+                  onClick={() => document.getElementById('latest-properties')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-[#FF7F32] hover:bg-orange-600 text-white h-auto px-5 py-3 sm:px-10 sm:py-6 rounded-full font-black text-sm sm:text-lg shadow-2xl border-none gap-3 group/btn transition-all hover:scale-105"
+                >
                   Explore Properties
                   <span className="bg-white/20 rounded-full p-1.5 group-hover/btn:rotate-45 transition-transform duration-300">
                     <ArrowUpRight size={20} />
