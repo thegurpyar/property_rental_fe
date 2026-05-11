@@ -345,10 +345,17 @@ export default function AddPropertyForm() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#FF7F32] hover:bg-orange-600 text-white h-auto py-7 rounded-3xl font-black text-xl shadow-2xl shadow-orange-500/30 transition-all active:scale-[0.98] border-none group"
+            className="w-full bg-[#FF7F32] hover:bg-orange-600 text-white h-auto py-5 md:py-7 rounded-2xl md:rounded-3xl font-black text-base md:text-xl shadow-2xl shadow-orange-500/30 transition-all active:scale-[0.98] border-none group gap-2"
           >
-            {isLoading ? <Loader2 className="animate-spin mr-2" /> : "Publish Property Listing"}
-            {!isLoading && <CheckCircle2 size={24} className="ml-2 group-hover:rotate-12 transition-transform" />}
+            {isLoading ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              <>
+                <span className="hidden sm:inline">Publish Property Listing</span>
+                <span className="sm:hidden">Publish Listing</span>
+                <CheckCircle2 size={20} className="md:w-6 md:h-6 group-hover:rotate-12 transition-transform" />
+              </>
+            )}
           </Button>
 
           <p className="text-center text-[11px] text-gray-400 flex items-center justify-center gap-2 font-bold uppercase tracking-[0.2em]">
